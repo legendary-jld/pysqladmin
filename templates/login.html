@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="spacer-md"></div>
+<div class="col-xs">
+  <form id="form-login" action="{{url_for('login')}}" method="post">
+    <input name="ip_address" type="hidden" id="ipAddress" value="" />
+    <div class="field">
+      <label class="label-micro">Database Host</label>
+      <input name="db_host" class="input" type="text" value="" placeholder="db-host" />
+    </div>
+    <div class="field">
+      <label class="label-micro">Database Port</label>
+      <input name="db_port" class="input" type="text" value="" placeholder="db-port" />
+    </div>
+    <div class="field">
+      <label class="label-micro">User Login</label>
+      <input name="user_login" class="input" type="text" value="" placeholder="user-login" />
+    </div>
+    <div class="field">
+      <label class="label-micro">User Password</label>
+      <input name="user_password" class="input" type="password" value="" placeholder="user-password" />
+    </div>
+    <div class="spacer-xs"><div>
+    <button id="btn-login" class="btn btn-block">Login</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$().ready(function(){
+    $("#btn-login").click(function() {
+      $("#form-login").submit();
+    })
+    $.getJSON('https://ipinfo.io', function(data){
+        $('#ipAddress').val(data.ip);
+    });
+});
+</script>
+{% endblock %}

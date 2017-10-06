@@ -10,6 +10,13 @@ class database:
         self.uri = uri
         self.event_history_length = event_history_length
         self.query_history_length = query_history_length
+        self.credentials = {
+            "host": "localhost",
+            "port": 3306,
+            "user": None,
+            "pswd": None,
+            "defaultdb": ""
+        }
         self.connection = None
         self.query_log = [] # Rolling list of last 10 queries? # query_log.pop(0) # query_log.append(last_query)
         self.event_log = [] # Rolling list of last 50 events
@@ -20,19 +27,34 @@ class database:
             "execution-time": None
             }
 
-    def connect(self, connection_string):
+    def connect(self, host=None, port=None, user=None, pswd=None, defaultdb=None):
         func = "mysql.database.connect()"
-        if connection_string:
-            self.uri = connection_string
-        if not self.uri:
-            self.report(func, "WARNING: Connection string empty")
-            return None
-        else:
-            self.uri = connection_string
+        if host:
+            self.credentials["host"] = host
+        if port:
+            self.credentials["port"] = port
+        if user:
+            self.credentials["user"] = user
+        if pswd:
+            self.credentials["pswd"] = pswd
+        if defaultdb:
+            self.credentials["defaultdb"] = defaultdb
+        #if connection_string:
+        #    self.uri = connection_string
+        #if not self.uri:
+        #    self.report(func, "WARNING: Connection string empty")
+        #    return None
+        #else:
+        #    self.uri = connection_string
         try:
             # self.connection = pypyodbc.connect(connection_string)
-            self.connection = pymysql.connect(host='localhost', port=5001, user='', passwd='', db='')
-            return self.connection
+            self.connection = pymysql.connect(
+                host=self.credentials["host"],
+                port=self.credentials["port"],
+                user=self.credentials["user"],
+                passwd=self.credentials["pswd"],
+                db=self.credentials["defaultdb"])
+            return self
         except Exception as e:
             self.report(func, "ERROR: {0}".format(e))
         return None
@@ -124,7 +146,7 @@ class database:
 
         query_duration = self.last_query["query-completed"] - self.last_query["query-initiated"]
         self.last_query["execution-time"] = "{}.{:.2}".format(query_duration.seconds, str(query_duration.microseconds*1000))
-
+        print("Records:", records)
         sqlCursor.close()
         self.capture(self.last_query)
         return records
@@ -145,3 +167,7 @@ class database:
         event_string = "{0} | {1}".format(function_desc, message)
         self.event_log.append(event_string)
         print(event_string)
+
+    def close(self):
+        if self.connection:
+            self.connection.close()

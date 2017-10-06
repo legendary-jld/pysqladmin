@@ -1,0 +1,41 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %} | PySQLAdmin</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="../static/img/python-icon.png">
+
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+  </head>
+  <body>
+    <header>
+      <div class="toolbar">
+        <div class="brand">PySqlAdmin</div>
+        {% if g.credentials -%}
+        <div class="info"><strong>Host:</strong>{{g.credentials["host"]}}</div>
+        <div class="info"><strong>Port:</strong>{{g.credentials["port"]}}</div>
+        <div class="info"><strong>User:</strong>{{g.credentials["user"]}}</div>
+        {% endif -%}
+      </div>
+    </header>
+    <!--[if lte IE 9]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
+    {% block content %}
+    {% endblock %}
+
+    <!-- <script src="../static/js/vendor/modernizr-3.5.0.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
+    <script src="../static/js/plugins.js"></script>
+    <script src="../static/js/main.js"></script>
+    {% block scripts %}
+    {% endblock %}
+  </body>
+</html>
