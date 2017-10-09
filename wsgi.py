@@ -12,28 +12,28 @@ app.config.from_pyfile('wsgi.cfg')
 DB_PATH = "local.db"
 
 if not os.path.isfile(DB_PATH):
-    setup.init_db()
+    setup.init_db(DB_PATH)
 
 
 def get_db():
-    print("GETTING DB")
     db = getattr(g, 'db', None)
     if db is None:
         g.db = mysql_handler.database(keep_alive=True, debug=True)
-    return g.db
+        return g.db
+
 
 
 def get_credentials():
-    print("GETTING CREDENTIALS")
     g.localdb = sqlite3_handler.database().connect(DB_PATH)
     cred_store = g.localdb.first("SELECT * FROM cred_store WHERE session_uid='{uid}'".format(uid=session.get("uid")))
     if cred_store:
+        print("GETTING CREDENTIALS")
         e = AES.new(app.config["SECRET_KEY"], AES.MODE_CFB, app.config["AES_IV"])
         credentials = {
-            "host": e.decrypt(cred_store["db_host"]),
-            "port": e.decrypt(cred_store["db_port"]),
-            "user": e.decrypt(cred_store["db_user"]),
-            "pswd": e.decrypt(cred_store["db_pswd"])
+            "host": e.decrypt(cred_store["db_host"]).decode(),
+            "port": e.decrypt(cred_store["db_port"]).decode(),
+            "user": e.decrypt(cred_store["db_user"]).decode(),
+            "pswd": e.decrypt(cred_store["db_pswd"]).decode()
         }
         return credentials
     else:
@@ -98,6 +98,7 @@ def login():
     user_login = request.form.get("user_login")
     user_pswd = request.form.get("user_password")
     if get_db().connect(host=db_host, port=int(db_port), user=user_login, pswd=user_pswd):
+        print("Connecting to database...")
         store_credentials(ip=ip_address, host=db_host, port=db_port, user=user_login, pswd=user_pswd)
         session["logged_in"] = True
     return redirect(url_for("index"))

@@ -17,10 +17,12 @@
     <header>
       <div class="toolbar">
         <div class="brand">PySqlAdmin</div>
-        {% if g.credentials -%}
+        {% if g.credentials and g.db -%}
         <div class="info"><strong>Host:</strong>{{g.credentials["host"]}}</div>
         <div class="info"><strong>Port:</strong>{{g.credentials["port"]}}</div>
         <div class="info"><strong>User:</strong>{{g.credentials["user"]}}</div>
+        {% else -%}
+        <strong>[NOT CONNECTED]</strong>
         {% endif -%}
       </div>
     </header>

@@ -26,12 +26,15 @@ class database:
 
         try:
             sqlCursor = self.connection.cursor()
-        except Exception:
-            self.report(func, "ERROR: Failed to create cursor")
+        except Exception as e:
+            self.report(func, "ERROR: Failed to create cursor: {e}".format(e))
             return None
 
         try:
-            sqlCursor.execute(query_string, values)
+            if values:
+                sqlCursor.execute(query_string, values)
+            else:
+                sqlCursor.execute(query_string)
         except Exception as e:
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
             return None
@@ -50,23 +53,29 @@ class database:
 
         try:
             sqlCursor = self.connection.cursor()
-        except Exception:
-            self.report(func, "ERROR: Failed to create cursor")
+        except Exception as e:
+            self.report(func, "ERROR: Failed to create cursor: {0}".format(e))
             return None
 
         try:
             sqlCursor.execute(query_string)
-        except Exception:
-            self.report(func, "ERROR: Query string failed to execute")
+        except Exception as e:
+            self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
             return None
 
         column_names = [column[0] for column in sqlCursor.description]
         if single_line:
-            records = dict(zip(column_names, sqlCursor.fetchone()))
+            values = sqlCursor.fetchone()
+            if values:
+                records = dict(zip(column_names, values))
+            else:
+                records = {}
         else:
+            values = sqlCursor.fetchall()
             records = []
-            for row in sqlCursor.fetchall():
-                records.append(dict(zip(column_names, row)))
+            if values:
+                for row in values:
+                    records.append(dict(zip(column_names, row)))
 
         sqlCursor.close()
         return records

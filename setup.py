@@ -1,10 +1,10 @@
 # DATABASE SETUP
-
 import sqlite3_handler
 
 
 def init_db(path):
     localdb = sqlite3_handler.database().connect(path)
+    print("FIRST RUN: Creating cred_store table...")
     sql="""
         CREATE TABLE cred_store(
             id integer PRIMARY KEY,
@@ -18,6 +18,7 @@ def init_db(path):
         """
     localdb.execute(sql)
 
+    print("Creating db_store table...")
     sql="""
         CREATE TABLE db_store(
             id integer PRIMARY KEY,
@@ -27,6 +28,7 @@ def init_db(path):
         """
     localdb.execute(sql)
 
+    print("Creating table_store table...")
     sql="""
         CREATE TABLE table_store(
             id integer PRIMARY KEY,
