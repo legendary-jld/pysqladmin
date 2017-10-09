@@ -58,11 +58,6 @@ def store_credentials(ip, host, port, user, pswd):
     print(session_uid)
 
 
-def csrf_token():
-    token = str(uuid.uuid4())
-    session["anticsrf"] = token
-    return token
-
 @app.before_request
 def before_request():
     g.request_info = {
@@ -75,6 +70,8 @@ def before_request():
     else:
         g.credentials = None
 
+    if not session.get("csrf_token"):
+        session["csrf_token"] = str(uuid.uuid4())
 
 
 @app.teardown_appcontext

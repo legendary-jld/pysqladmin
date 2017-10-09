@@ -17,6 +17,23 @@ def init_db(path):
             db_db text)
         """
     localdb.execute(sql)
-    # Create Database_store
-    # Create Table store
+
+    sql="""
+        CREATE TABLE db_store(
+            id integer PRIMARY KEY,
+            session_uid text NOT NULL,
+            created text NOT NULL,
+            db_name text)
+        """
+    localdb.execute(sql)
+
+    sql="""
+        CREATE TABLE table_store(
+            id integer PRIMARY KEY,
+            session_uid text NOT NULL,
+            created text NOT NULL,
+            db_id integer NOT NULL,
+            table_name text)
+        """
+    localdb.execute(sql)
     localdb.close()
