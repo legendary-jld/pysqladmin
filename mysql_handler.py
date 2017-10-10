@@ -134,14 +134,20 @@ class database:
             return None
         self.last_query["query-completed"] = datetime.datetime.utcnow()
 
-        column_names = [column[0] for column in sqlCursor.description]
+        column_names = [column[0].lower() for column in sqlCursor.description]
 
-        records = []
         if single_line:
-            records.append(dict(zip(column_names, sqlCursor.fetchone())))
+            data = sqlCursor.fetchone()
+            if data:
+                records.append(dict(zip(column_names, data)))
+            else:
+                records = {}
         else:
-            for row in sqlCursor.fetchall():
-                records.append(dict(zip(column_names, row)))
+            data = sqlCursor.fetchall()
+            records = []
+            if data:
+                for row in data:
+                    records.append(dict(zip(column_names, row)))
         self.last_query["query-processed"] = datetime.datetime.utcnow()
 
         query_duration = self.last_query["query-completed"] - self.last_query["query-initiated"]

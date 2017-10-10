@@ -2,7 +2,14 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="spacer-md"></div>
+<div class="spacer-xs"></div>
+{% if databases %}
+<ul>
+  {% for db in databases %}
+  <li><i class="fa fa-database"></i>&nbsp;{{db["database"]}}</li>
+  {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}

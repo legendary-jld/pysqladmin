@@ -65,17 +65,20 @@ class database:
 
         column_names = [column[0] for column in sqlCursor.description]
         if single_line:
-            values = sqlCursor.fetchone()
-            if values:
-                records = dict(zip(column_names, values))
+            data = sqlCursor.fetchone()
+            if data:
+                records = dict(zip(column_names, data))
             else:
                 records = {}
+                self.report(func, "WARNING: Empty result set: {0}".format(query_string))
         else:
-            values = sqlCursor.fetchall()
+            data = sqlCursor.fetchall()
             records = []
-            if values:
-                for row in values:
+            if data:
+                for row in data:
                     records.append(dict(zip(column_names, row)))
+            else:
+                self.report(func, "WARNING: Empty result set: {0}".format(query_string))
 
         sqlCursor.close()
         return records

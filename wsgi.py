@@ -20,14 +20,14 @@ def get_db():
     if db is None:
         g.db = mysql_handler.database(keep_alive=True, debug=True)
         return g.db
-
+    return g.db
 
 
 def get_credentials():
     g.localdb = sqlite3_handler.database().connect(DB_PATH)
     cred_store = g.localdb.first("SELECT * FROM cred_store WHERE session_uid='{uid}'".format(uid=session.get("uid")))
     if cred_store:
-        print("GETTING CREDENTIALS")
+        app_print("Credentials found...")
         e = AES.new(app.config["SECRET_KEY"], AES.MODE_CFB, app.config["AES_IV"])
         credentials = {
             "host": e.decrypt(cred_store["db_host"]).decode(),
@@ -41,7 +41,7 @@ def get_credentials():
 
 
 def store_credentials(ip, host, port, user, pswd):
-    print("STORING CREDENTIALS")
+    app_print("Saving new credentials...")
     g.localdb = sqlite3_handler.database().connect(DB_PATH)
     session_uid = "{ip}:{id}".format(ip=ip,id=str(uuid.uuid4())) #Assign to BOTH variables
     sql = """
@@ -55,7 +55,7 @@ def store_credentials(ip, host, port, user, pswd):
         "user":e.encrypt(user), "pswd":e.encrypt(pswd)
         })
     session["uid"] = session_uid
-    print(session_uid)
+    # print("PyMy: ", session_uid)
 
 
 @app.before_request
@@ -66,12 +66,21 @@ def before_request():
         }
     if session.get("logged_in"):
         g.credentials = get_credentials()
-        get_db()
+        get_db().connect(
+            host=g.credentials["host"],
+            port=int(g.credentials["port"]),
+            user=g.credentials["user"],
+            pswd=g.credentials["pswd"]
+            )
+        app_print("Logged In...")
     else:
+        app_print("Not Logged In...")
         g.credentials = None
 
-    if not session.get("csrf_token"):
+    if session.get("csrf_token") is None:
         session["csrf_token"] = str(uuid.uuid4())
+
+    # app_print(session)
 
 
 @app.teardown_appcontext
@@ -84,27 +93,30 @@ def teardown_appcontext(exception):
 
 @app.route("/")
 def index():
-    if session.get("logged_in") and g.db.connection:
-        return render_template("dashboard.html")
+    if session.get("logged_in") and g.credentials:
+        databases = g.db.query("SHOW DATABASES;")
+        return render_template("dashboard.html", databases=databases)
     else:
         return render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
-def login():
+def app_login():
     ip_address = request.form.get("ip_address")
     db_host = request.form.get("db_host")
     db_port = request.form.get("db_port")
     user_login = request.form.get("user_login")
     user_pswd = request.form.get("user_password")
     if get_db().connect(host=db_host, port=int(db_port), user=user_login, pswd=user_pswd):
-        print("Connecting to database...")
+        app_print("Connected to database...")
         store_credentials(ip=ip_address, host=db_host, port=db_port, user=user_login, pswd=user_pswd)
         session["logged_in"] = True
     return redirect(url_for("index"))
 
-def now():
-    return datetime.datetime.utcnow()
+@app.route("/logout")
+def app_logout():
+    session.clear()
+    return redirect(url_for('index'))
 
 @app.route("/debug/events")
 def debug_events():
@@ -116,6 +128,14 @@ def debug_queries():
     databases = g.db.query("show databases;")
     return jsonify(g.db.query_log)
 
+def now():
+    return datetime.datetime.utcnow()
+
+def app_print(message):
+    print(now().strftime("%b-%d %H-%M-%S |"), "PyMy: ", message)
 
 if __name__ == "__main__":
-    app.run()
+    if app.config["DEBUG"] == False:
+        app.run(ssl_context='adhoc')
+    else:
+        app.run()
