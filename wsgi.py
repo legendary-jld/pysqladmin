@@ -94,7 +94,18 @@ def teardown_appcontext(exception):
 @app.route("/")
 def index():
     if session.get("logged_in") and g.credentials:
-        databases = g.db.query("SHOW DATABASES;")
+        dbs = g.db.query("SHOW DATABASES;")
+        databases = []
+        if dbs:
+            for db in dbs:
+                db_name = db["database"]
+                if not db_name[:1] == "#":
+                    if db_name in ("information_schema","mysql","performance_schema","sys") or db_name[:1] == "#":
+                        db_system =  True
+                    else:
+                        db_system = False
+                    databases.append({"name":db_name, "system":db_system})
+            databases = sorted(databases, key=lambda data: (data["system"], data["name"]))
         return render_template("dashboard.html", databases=databases)
     else:
         return render_template("login.html")
