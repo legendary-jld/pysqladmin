@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+<section>
+  <div class="container">
+    <div class="columns">
+      <div class="column col-3 col-xs-12">
+        <div class="panel" id="nav-panel">
+          <div class="panel-header text-center">
+            <!--
+            <figure class="avatar avatar-lg">
+              <img src="img/avatar-2.png" alt="Logo">
+            </figure>
+            -->
+            <div class="panel-title h5 mt-10">PyMyAdmin</div>
+            <div class="panel-subtitle">v0.1.0</div>
+            {% if session.get('connected') -%}
+            <div class="panel-subtitle text-success">[CONNECTED]</div>
+            {% else -%}
+            <div class="panel-subtitle text-error"><i class="fa fa-chain-broken"></i> [DISCONNECTED]</div>
+            {% endif -%}
+          </div>
+          <nav class="panel-nav">
+            <ul class="tab tab-block">
+              <li class="tab-item active" id="schema-tab">
+                <a href="#nav-panel" onclick="activatePanel('nav-panel', 'schema-panel', 'schema-tab')"><i class="fa fa-sitemap"></i> Schema</a>
+              </li>
+              <li class="tab-item" id="settings-tab">
+                <a href="#nav-panel" onclick="activatePanel('nav-panel', 'settings-panel', 'settings-tab')"><i class="fa fa-cog"></i> Settings</a>
+              </li>
+            </ul>
+          </nav>
+          <div class="panel-body active" id="schema-panel">
+          {% if session.get('connected') -%}
+            {% if databases -%}
+            <ul class="menu">
+              <li class="divider" data-content="Databases">
+              {% for db in databases -%}
+              <li class="menu-item {{'text-gray' if db['system']}}">
+                <a href="#"><i class="fa fa-database"></i> {{db["name"]}}</a>
+              </li>
+              {% endfor -%}
+              <li class="divider"></li>
+            </ul>
+            {% endif -%}
+          {% else -%}
+
+          {% endif -%}
+          </div>
+          <div class="panel-body" id="settings-panel">
+            <div class="divider" data-content="Credentials"></div>
+            {% if g.credentials and g.db -%}
+            <form id="form-login" action="{{url_for('app_login')}}" method="post">
+              <input name="ip_address" type="hidden" id="ipAddress" value="" />
+              <div class="form-group">
+                <label class="form-label" for="input-host">Host</label>
+                <input class="form-input" type="text" id="input-host" placeholder="Host" value="{{g.credentials['host']}}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="input-port">Port</label>
+                <input class="form-input" type="text" id="input-port" placeholder="Port" value="{{g.credentials['port']}}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="input-user">User</label>
+                <input class="form-input" type="text" id="input-user" placeholder="User" value="{{g.credentials['user']}}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="input-password">Password</label>
+                <input class="form-input" type="password" id="input-password" placeholder="Password" value="1234567890">
+              </div>
+              <button id="btn-login" class="btn btn-block"><i class="fa fa-sign-in"></i> Login</button>
+            </form>
+            {% endif -%}
+            <br />
+            <div class="divider" data-content="Actions"></div>
+            {% if session.get('logged_in') %}
+            <a class="btn btn-block" href="{{url_for('debug_events')}}"><i class="fa fa-list"></i> Events Log</a>
+            <a class="btn btn-block" href="{{url_for('debug_queries')}}"><i class="fa fa-list-alt"></i> Query Log</a>
+            <a class="btn btn-block" href="{{url_for('app_logout')}}"><i class="fa fa-sign-out"></i> Logout</a>
+            {% endif -%}
+          </div>
+          <div class="panel-footer">
+
+          </div>
+        </div>
+      </div>
+      <div class="column col-9 col-xs-12">
+      {% if session.get('connected') -%}
+        {% block content %}
+        {% endblock %}
+      {% else -%}
+        <div class="empty" style="height:100vh;">
+          <div class="empty-icon">
+            <i class="icon icon-people"></i>
+          </div>
+          <p class="empty-title h5">Not connected</p>
+          <p class="empty-subtitle">Your connection to the server has been lost or is no longer valid.</p>
+          <div class="empty-action">
+            <button class="btn btn-primary" id="btn-refresh"><i class="fa fa-refresh"></i> Refresh</button>
+          </div>
+          <div class="empty-action">
+            <button class="btn btn-primary" id="btn-credentials">Change Credentials</button>
+          </div>
+        </div>
+      {% endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
