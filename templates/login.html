@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Login{% endblock %}
 
-{% block content %}
+{% block nav %}
 <div class="spacer-md"></div>
 <div class="col-xs">
   <form id="form-login" action="{{url_for('app_login')}}" method="post">
@@ -23,20 +23,7 @@
       <input name="user_password" class="input" type="password" value="" placeholder="user-password" />
     </div>
     <div class="spacer-xs"><div>
-    <button id="btn-login" class="btn btn-block">Login</button>
+    <button id="btn-login" class="btn btn-block"><i class="fa fa-signin"></i> Login</button>
   </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-$().ready(function(){
-    $("#btn-login").click(function() {
-      $("#form-login").submit();
-    })
-    $.getJSON('https://ipinfo.io', function(data){
-        $('#ipAddress').val(data.ip);
-    });
-});
-</script>
 {% endblock %}

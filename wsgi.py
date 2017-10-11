@@ -66,13 +66,16 @@ def before_request():
         }
     if session.get("logged_in"):
         g.credentials = get_credentials()
-        get_db().connect(
+        connected = get_db().connect(
             host=g.credentials["host"],
             port=int(g.credentials["port"]),
             user=g.credentials["user"],
             pswd=g.credentials["pswd"]
             )
-        app_print("Logged In...")
+        if connected:
+            session["connected"] = True
+        else:
+            session["connected"] = False
     else:
         app_print("Not Logged In...")
         g.credentials = None
@@ -106,7 +109,7 @@ def index():
                         db_system = False
                     databases.append({"name":db_name, "system":db_system})
             databases = sorted(databases, key=lambda data: (data["system"], data["name"]))
-        return render_template("dashboard.html", databases=databases)
+        return render_template("base_nav.html", databases=databases)
     else:
         return render_template("login.html")
 
@@ -131,7 +134,7 @@ def app_logout():
 
 @app.route("/debug/events")
 def debug_events():
-    return jsonify(g.db.event_log)
+    return render_template("debug_events.html", event_log=g.db.event_log)
 
 
 @app.route("/debug/queries")
