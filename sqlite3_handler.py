@@ -37,12 +37,13 @@ class database:
                 sqlCursor.execute(query_string)
         except Exception as e:
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
+            self.report(func, "QUERY: {0}".format(query_string))
             return None
         self.connection.commit()
         sqlCursor.close()
         return True
 
-    def query(self, query_string, single_line=False):
+    def query(self, query_string, values=None, single_line=False):
         func = "sqlite3.database.query()"
         if not self.connection:
             self.report(func, "WARNING: No open connection - use mysql.database.connect()")
@@ -58,9 +59,13 @@ class database:
             return None
 
         try:
-            sqlCursor.execute(query_string)
+            if values:
+                sqlCursor.execute(query_string, values)
+            else:
+                sqlCursor.execute(query_string)
         except Exception as e:
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
+            self.report(func, "QUERY: {0}".format(query_string))
             return None
 
         column_names = [column[0] for column in sqlCursor.description]

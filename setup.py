@@ -24,7 +24,9 @@ def init_db(path):
             id integer PRIMARY KEY,
             session_uid text NOT NULL,
             created text NOT NULL,
-            db_name text)
+            updated text,
+            db_name text,
+            flag_sys integer)
         """
     localdb.execute(sql)
 
@@ -34,8 +36,23 @@ def init_db(path):
             id integer PRIMARY KEY,
             session_uid text NOT NULL,
             created text NOT NULL,
+            updated text,
             db_id integer NOT NULL,
             table_name text)
         """
     localdb.execute(sql)
-    localdb.close()
+
+    print("Creating column_store table...")
+    sql="""
+        CREATE TABLE column_store(
+            id integer PRIMARY KEY,
+            session_uid text NOT NULL,
+            created text NOT NULL,
+            updated text,
+            db_id integer NOT NULL,
+            table_id integer NOT NULL,
+            column_name text)
+        """
+    localdb.execute(sql)
+
+    localdb.close() # Close database after all tables have been created

@@ -66,7 +66,7 @@ class database:
             return None
         return True
 
-    def execute(self, query_string):
+    def execute(self, query_string, values=None):
         func = "mysql.database.execute()"
         if not self.connection:
             self.report(func, "WARNING: No open connection - use mysql.database.connect()")
@@ -90,9 +90,13 @@ class database:
             return None
 
         try:
-            sqlCursor.execute(query_string)
+            if values:
+                sqlCursor.execute(query_string, values)
+            else:
+                sqlCursor.execute(query_string)
         except Exception:
             self.report(func, "ERROR: Query string failed to execute")
+            self.report(func, "QUERY: {0}".format(query_string))
             return None
         sqlCursor.commit()
         self.last_query["query-completed"] = datetime.datetime.utcnow()
@@ -104,7 +108,7 @@ class database:
         self.capture(self.last_query)
         return True
 
-    def query(self, query_string, single_line=False):
+    def query(self, query_string, values=None, single_line=False):
         func = "mysql.database.query()"
         if not self.connection:
             self.report(func, "WARNING: No open connection - use mysql.database.connect()")
@@ -128,9 +132,13 @@ class database:
             return None
 
         try:
-            sqlCursor.execute(query_string)
+            if values:
+                sqlCursor.execute(query_string, values)
+            else:
+                sqlCursor.execute(query_string)
         except Exception:
             self.report(func, "ERROR: Query string failed to execute")
+            self.report(func, "QUERY: {0}".format(query_string))
             return None
         self.last_query["query-completed"] = datetime.datetime.utcnow()
 

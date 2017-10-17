@@ -3,7 +3,7 @@
 {% block nav %}
 <section>
   <div class="container">
-    <div class="columns">
+    <div class="columns" id="body-columns">
       <div class="column col-3 col-xs-12">
         <div class="panel" id="nav-panel">
           <div class="panel-header text-center">
@@ -31,18 +31,31 @@
             </ul>
           </nav>
           <div class="panel-body active" id="schema-panel">
-          {% if session.get('connected') -%}
-            {% if databases -%}
+            {% if g.schema -%}
             <ul class="menu">
               <li class="divider" data-content="Databases">
-              {% for db in databases -%}
-              <li class="menu-item {{'text-gray' if db['system']}}">
-                <a href="#"><i class="fa fa-database"></i> {{db["name"]}}</a>
+              {% for dbkey in g.schema -%}
+              {% set db = g.schema[dbkey] -%}
+              <li class="menu-item {{'text-gray' if db['flag_sys']}}">
+                <a href="#"><i class="fa fa-database"></i> {{db["db_name"]}}</a>
+                <ul class="menu menu-sub"> <!-- Tables Menu -->
+                  <li class="divider" data-content="Tables">
+                  {% for tablekey in db["tables"] -%}
+                  {% set table = db["tables"][tablekey] -%}
+                  <li class="menu-item">
+                    <a href="#"><i class="fa fa-database"></i> {{table["table_name"]}}</a>
+                  </li>
+                  {% endfor -%}
+                  <li class="divider"></li>
+                </ul> <!-- / Tables Menu -->
+
               </li>
               {% endfor -%}
               <li class="divider"></li>
             </ul>
             {% endif -%}
+          {% if session.get('connected') -%}
+            
           {% else -%}
 
           {% endif -%}
@@ -86,6 +99,21 @@
       </div>
       <div class="column col-9 col-xs-12">
       {% if session.get('connected') -%}
+      <header class="navbar bg-secondary">
+        <section class="navbar-section">
+          <div class="btn-group btn-group-block">
+            <a href="#" class="btn"><i class="fa fa-terminal"></i> Query</a>
+            <a href="#" class="btn"><i class="fa fa-table"></i> Data</a>
+            <a href="#" class="btn"><i class="fa fa-columns"></i> Structure</a>
+          </div>
+        </section>
+        <section class="navbar-center">
+          <!-- centered logo or brand -->
+        </section>
+        <section class="navbar-section">
+          <a href="https://github.com/legendary-jld/pysqladmin" class="btn btn-link"><i class="fa fa-github"></i></a>
+        </section>
+      </header>
         {% block content %}
         {% endblock %}
       {% else -%}

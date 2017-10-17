@@ -2,10 +2,9 @@ import os, datetime, uuid
 from flask import Flask, render_template, g, request, \
     session, redirect, url_for, jsonify
 from Crypto.Cipher import AES
-# local libaries
-import setup
-import mysql_handler
-import sqlite3_handler
+# local libaries below
+from simple import now, bit
+import setup, schema, mysql_handler, sqlite3_handler
 
 app = Flask(__name__)
 app.config.from_pyfile('wsgi.cfg')
@@ -76,6 +75,7 @@ def before_request():
             session["connected"] = True
         else:
             session["connected"] = False
+        g.schema = schema.schema(g.localdb, g.db, session.get("uid")).load()
     else:
         app_print("Not Logged In...")
         g.credentials = None
@@ -97,21 +97,13 @@ def teardown_appcontext(exception):
 @app.route("/")
 def index():
     if session.get("logged_in") and g.credentials:
-        dbs = g.db.query("SHOW DATABASES;")
-        databases = []
-        if dbs:
-            for db in dbs:
-                db_name = db["database"]
-                if not db_name[:1] == "#":
-                    if db_name in ("information_schema","mysql","performance_schema","sys") or db_name[:1] == "#":
-                        db_system =  True
-                    else:
-                        db_system = False
-                    databases.append({"name":db_name, "system":db_system})
-            databases = sorted(databases, key=lambda data: (data["system"], data["name"]))
-        return render_template("base_nav.html", databases=databases)
+        return render_template("base_nav.html")
     else:
         return render_template("login.html")
+
+@app.route("/query")
+def app_query():
+    return render_template("query.html")
 
 
 @app.route("/login", methods=["POST"])
@@ -124,6 +116,8 @@ def app_login():
     if get_db().connect(host=db_host, port=int(db_port), user=user_login, pswd=user_pswd):
         app_print("Connected to database...")
         store_credentials(ip=ip_address, host=db_host, port=db_port, user=user_login, pswd=user_pswd)
+        new_schema = schema.schema(g.localdb, g.db, session["uid"])
+        new_schema.mysql_refresh_dbs(recursive=True)
         session["logged_in"] = True
     return redirect(url_for("index"))
 
@@ -142,11 +136,8 @@ def debug_queries():
     databases = g.db.query("show databases;")
     return jsonify(g.db.query_log)
 
-def now():
-    return datetime.datetime.utcnow()
-
 def app_print(message):
-    print(now().strftime("%b-%d %H-%M-%S |"), "PyMy: ", message)
+    print(now().strftime("%b-%d %H-%M-%S |"), "PySQL: ", message)
 
 if __name__ == "__main__":
     if app.config["DEBUG"] == False:

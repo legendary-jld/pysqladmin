@@ -1,0 +1,19 @@
+{% extends 'base_nav.html' %}
+{% block title %}Query{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="columns">
+    <div class="column col-12">
+      <div class="form-group">
+        <label class="form-label" for="query-input">Query</label>
+        <textarea class="form-input" id="query-input" style="min-height:50vh;"></textarea>
+      </div>
+      <div class="form-group">
+        <button class="btn"><i class="fa fa-print"></i> To Results</button>
+        <button class="btn"><i class="fa fa-paper-plane"></i> Execute</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

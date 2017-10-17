@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}{% endblock %} | PySQLAdmin</title>
+    <title>{% block title %}[Disconnected]{% endblock %} | PySQLAdmin</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -17,7 +17,10 @@
     <link rel="stylesheet" href="../static/css/main.css">
     <style>
     #nav-panel{
-      min-height:100vh;
+      height:100vh;
+    }
+    #body-columns > .column{
+      padding:0;
     }
     .panel-body{
       display:none;
@@ -28,9 +31,22 @@
     .btn.btn-block{
       margin: 0.25rem auto;
     }
+    #schema-panel .menu-item > a{
+      white-space:nowrap;
+    }
+    #schema-panel .menu.menu-sub{
+      max-height:0px;
+      overflow: hidden;
+      transition: max-height 0.75s ease-out;
+    }
+    #schema-panel .menu-item.menu-item-open > .menu.menu-sub{
+      max-height:1000vh; /* larger than ever needed */
+      transition: max-height 0.5s ease-in;
+    }
     </style>
     {% block style %}
     {% endblock %}
+    <!-- {{g.schema | safe}} -->
   </head>
   <body>
     <header>
@@ -68,6 +84,9 @@
       $("#btn-refresh").click(function() {
         $("#btn-refresh .fa").addClass("fa-spin");
         window.location.reload();
+      });
+      $(".menu-item > a").click(function() {
+        $(this).closest(".menu-item").toggleClass("menu-item-open");
       });
     });
     </script>
