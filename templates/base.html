@@ -33,15 +33,28 @@
     }
     #schema-panel .menu-item > a{
       white-space:nowrap;
+      padding: 1px 2px;
     }
     #schema-panel .menu.menu-sub{
       max-height:0px;
       overflow: hidden;
       transition: max-height 0.75s ease-out;
+      padding:0 0 0 0rem;
+      box-shadow: none;
+    }
+    #schema-panel .menu.menu-sub .menu-item a::before{
+      content:'\00ac'; /* &not; equivalent */
+      display: inline-block;
+      color:#CCC;
+      transform:scale(-1.5,-1);
+      margin-right:0.25rem;
     }
     #schema-panel .menu-item.menu-item-open > .menu.menu-sub{
       max-height:1000vh; /* larger than ever needed */
-      transition: max-height 0.5s ease-in;
+      transition: max-height 0.25s linear;
+    }
+    .icon-subitem{
+
     }
     </style>
     {% block style %}
