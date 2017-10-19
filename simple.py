@@ -4,7 +4,13 @@ def now(): # quick utcnow()
     return datetime.datetime.utcnow()
 
 def bit(value): # boolean to int
-    if value:
-        return 1
+    if isinstance(value, str):
+        if value.lower() in ("yes", "y", "true", "1"):
+            return 1
+        else:
+            return 0
     else:
-        return 0
+        if value:
+            return 1
+        else:
+            return 0

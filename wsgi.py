@@ -116,8 +116,6 @@ def app_login():
     if get_db().connect(host=db_host, port=int(db_port), user=user_login, pswd=user_pswd):
         app_print("Connected to database...")
         store_credentials(ip=ip_address, host=db_host, port=db_port, user=user_login, pswd=user_pswd)
-        new_schema = schema.schema(g.localdb, g.db, session["uid"])
-        new_schema.mysql_refresh_dbs(recursive=True)
         session["logged_in"] = True
     return redirect(url_for("index"))
 
@@ -125,6 +123,12 @@ def app_login():
 def app_logout():
     session.clear()
     return redirect(url_for('index'))
+
+@app.route("/async/schema")
+def async_schema():
+    new_schema = schema.schema(g.localdb, g.db, session["uid"])
+    new_schema.mysql_refresh_dbs(recursive=True, purge=True)
+    return jsonify(success=True)
 
 @app.route("/debug/events")
 def debug_events():

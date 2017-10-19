@@ -51,15 +51,31 @@
     }
     #schema-panel .menu-item.menu-item-open > .menu.menu-sub{
       max-height:1000vh; /* larger than ever needed */
-      transition: max-height 0.25s linear;
+      transition: max-height 0.25s ease-in;
     }
     .icon-subitem{
 
     }
+    .menu-item.db > a > i::before, .menu-item.table > a > i::before, .menu-item.column > a > i::before{
+      font: normal normal normal 14px/1 FontAwesome;
+      font-size: inherit;
+    }
+    .menu-item.db > a > i::after, .menu-item.table > a > i::after, .menu-item.column > a > i::after{
+      content:"\00a0";
+    }
+    .menu-item.db > a > i::before{
+      content:"\f1c0";
+    }
+    .menu-item.table > a > i::before{
+      content:"\f0ce";
+    }
+    .menu-item.column > a > i::before{
+      content:"\f05a";
+    }
+
     </style>
     {% block style %}
     {% endblock %}
-    <!-- {{g.schema | safe}} -->
   </head>
   <body>
     <header>

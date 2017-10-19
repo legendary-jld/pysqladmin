@@ -51,7 +51,9 @@ def init_db(path):
             updated text,
             db_id integer NOT NULL,
             table_id integer NOT NULL,
-            column_name text)
+            column_name text,
+            column_type text,
+            is_nullable integer)
         """
     localdb.execute(sql)
 

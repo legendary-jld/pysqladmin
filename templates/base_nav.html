@@ -36,17 +36,27 @@
               <li class="divider" data-content="Databases">
               {% for dbkey in g.schema -%}
               {% set db = g.schema[dbkey] -%}
-              <li class="menu-item">
-                <a href="#"><i class="fa fa-database {{'text-gray' if db['flag_sys']}}"></i>&nbsp;{{db["db_name"]}}</a>
+              <li class="menu-item db {{'db-sys' if db['flag_sys']}}">
+                <a href="#"><i></i>{{db["db_name"]}}</a>
                 <ul class="menu menu-sub"> <!-- Tables Menu -->
                   <!--<li class="divider" data-content="Tables">-->
                   <li class="menu-item">
-                    <a href="#"><i class="fa fa-plus-circle"></i> New</a>
+                    <a href="#"><i class="fa fa-plus-square"></i> New</a>
                   </li>
                   {% for tablekey in db["tables"] -%}
                   {% set table = db["tables"][tablekey] -%}
-                  <li class="menu-item">
-                    <a href="#"><i class="fa fa-table"></i> {{table["table_name"]}}</a>
+                  <li class="menu-item table">
+                    <a href="#"><i></i>{{table["table_name"]}}</a>
+                    <ul class="menu menu-sub"> <!-- Tables Menu -->
+                      <li class="menu-item">
+                        <a href="#"><i class="fa fa-plus-circle"></i> New</a>
+                      </li>
+                    {% for column in table["columns"] -%}
+                      <li class="menu-item column">
+                        <a href="#"><i></i>{{column["column_name"]}} <small class="text-gray">[{{column['column_type']}} | {{column['is_nullable']}}]</small></a>
+                      </li>
+                    {% endfor %}
+                    </ul>
                   </li>
                   {% endfor -%}
                 </ul> <!-- / Tables Menu -->
