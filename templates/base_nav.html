@@ -52,8 +52,17 @@
                         <a href="#"><i class="fa fa-plus-circle"></i> New</a>
                       </li>
                     {% for column in table["columns"] -%}
-                      <li class="menu-item column">
-                        <a href="#"><i></i>{{column["column_name"]}} <small class="text-gray">[{{column['column_type']}} | {{column['is_nullable']}}]</small></a>
+                      {% if column['column_type'][:7] == "varchar" or column['column_type'][:4] == "char" -%}
+                        {% set col_type = 'char' -%}
+                      {% elif column['column_type'][:4] == "text" -%}
+                        {% set col_type = 'text' -%}
+                      {% elif column['column_type'][:4] in ("date", "time") -%}
+                        {% set col_type = 'date' -%}
+                      {% elif column['column_type'][:6] == "bigint" or column['column_type'][:3] == "int" -%}
+                        {% set col_type = 'numeric' -%}
+                      {% endif -%}
+                      <li class="menu-item column {{col_type}}">
+                        <a href="#" title="{{column['column_type']}} | {{column['is_nullable']}}"><i></i>{{column["column_name"]}}</a>
                       </li>
                     {% endfor %}
                     </ul>

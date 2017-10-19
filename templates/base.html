@@ -42,6 +42,10 @@
       padding:0 0 0 0rem;
       box-shadow: none;
     }
+    #schema-panel .menu.menu-sub .menu.menu-sub{
+      /* Third level should have extra padding */
+      padding-left:0.5rem;
+    }
     #schema-panel .menu.menu-sub .menu-item a::before{
       content:'\00ac'; /* &not; equivalent */
       display: inline-block;
@@ -72,7 +76,18 @@
     .menu-item.column > a > i::before{
       content:"\f05a";
     }
-
+    .menu-item.column.char > a > i::before{
+      content:"\f031";
+    }
+    .menu-item.column.text > a > i::before{
+      content:"\f15c";
+    }
+    .menu-item.column.numeric > a > i::before{
+      content:"\f292";
+    }
+    .menu-item.column.date > a > i::before{
+      content:"\f073";
+    }
     </style>
     {% block style %}
     {% endblock %}
