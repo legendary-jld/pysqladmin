@@ -160,7 +160,7 @@ def app_print(message):
     print(now().strftime("%b-%d %H-%M-%S |"), "PySQL: ", message)
 
 
-@errorhandling.app_errorhandler(500)
+@app.errorhandler(500)
 def internal_server_error_500(error):
     app_print(str(error))
     return str(error)
