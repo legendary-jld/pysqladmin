@@ -23,20 +23,27 @@ def get_db():
 
 
 def get_credentials():
-    g.localdb = sqlite3_handler.database().connect(DB_PATH)
-    cred_store = g.localdb.first("SELECT * FROM cred_store WHERE session_uid='{uid}'".format(uid=session.get("uid")))
-    if cred_store:
-        app_print("Credentials found...")
-        e = AES.new(app.config["SECRET_KEY"], AES.MODE_CFB, app.config["AES_IV"])
+    if app.config.get('OPENSHIFT_BUILD_NAMESPACE'):
         credentials = {
-            "host": e.decrypt(cred_store["db_host"]).decode(),
-            "port": e.decrypt(cred_store["db_port"]).decode(),
-            "user": e.decrypt(cred_store["db_user"]).decode(),
-            "pswd": e.decrypt(cred_store["db_pswd"]).decode()
+            "host": app.config.get('DB_HOST'),
+            "port": app.config.get('DB_PORT'),
+            "user": app.config.get('DB_USER'),
+            "pswd": app.config.get('DB_PASS')
         }
-        return credentials
     else:
-        return None
+        g.localdb = sqlite3_handler.database().connect(DB_PATH)
+        cred_store = g.localdb.first("SELECT * FROM cred_store WHERE session_uid='{uid}'".format(uid=session.get("uid")))
+        if cred_store:
+            app_print("Credentials found...")
+            e = AES.new(app.config["SECRET_KEY"], AES.MODE_CFB, app.config["AES_IV"])
+            credentials = {
+                "host": e.decrypt(cred_store["db_host"]).decode(),
+                "port": e.decrypt(cred_store["db_port"]).decode(),
+                "user": e.decrypt(cred_store["db_user"]).decode(),
+                "pswd": e.decrypt(cred_store["db_pswd"]).decode()
+            }
+            return credentials
+    return None
 
 
 def store_credentials(ip, host, port, user, pswd):
@@ -61,8 +68,17 @@ def store_credentials(ip, host, port, user, pswd):
 def before_request():
     g.request_info = {
         "browser": request.user_agent.browser,
-        "initiated": datetime.datetime.utcnow()
+        "initiated": datetime.datetime.utcnow(),
+        "ip_address": request.headers.get("x-forwarded-for") # For Openshift v2, (app.py - tornado must be set to forward these headers)
         }
+
+    if not session.get("logged_in"):
+        if g.request_info["ip_address"] in app.config.get("TRUSTED_IP_ADDRESSES")
+            if not session.get("OPENSHIFT") and app.config.get("OPENSHIFT_BUILD_NAMESPACE"):
+                session["OPENSHIFT"] = True
+                session["OPENSHIFT_VERSION"] = 3
+                session["logged_in"] = True
+
     if session.get("logged_in"):
         g.credentials = get_credentials()
         connected = get_db().connect(

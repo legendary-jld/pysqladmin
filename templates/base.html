@@ -70,6 +70,9 @@
     .menu-item.db > a > i::before{
       content:"\f1c0";
     }
+    .menu-item.db.db-sys > a > i::before{
+      color:#BBB;
+    }
     .menu-item.table > a > i::before{
       content:"\f0ce";
     }
@@ -92,6 +95,7 @@
     {% block style %}
     {% endblock %}
   </head>
+  <!-- SIZE: {{size}} -->
   <body>
     <header>
     </header>

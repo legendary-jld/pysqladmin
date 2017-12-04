@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block nav %}
+<div class="spacer-md"></div>
+<div class="col-xs">
+  <form id="form-login" action="{{url_for('app_login')}}" method="post">
+    <input name="ip_address" type="hidden" id="ipAddress" value="" />
+    <div class="field">
+      <label class="label-micro">User Login <small>(root)</small></label>
+      <input name="user_login" class="input" type="text" value="" placeholder="user-login" />
+    </div>
+    <div class="field">
+      <label class="label-micro">Verify Admin Password</label>
+      <input name="user_password" class="input" type="password" value="" placeholder="user-password" />
+    </div>
+    <div class="spacer-xs"><div>
+    <button id="btn-login" class="btn btn-block"><i class="fa fa-signin"></i> Login</button>
+  </div>
+</div>
+{% endblock %}
