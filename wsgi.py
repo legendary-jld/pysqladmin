@@ -24,6 +24,7 @@ def get_db():
 
 def get_credentials():
     if session.get("OPENSHIFT"):
+        app_print("LOAD OPENSHIFT CREDENTIALS")
         credentials = {
             "host": app.config.get('DB_HOST'),
             "port": app.config.get('DB_PORT'),
@@ -31,6 +32,7 @@ def get_credentials():
             "pswd": app.config.get('DB_PASS')
         }
     else:
+        app_print("LOAD LOCAL CREDENTIALS")
         g.localdb = sqlite3_handler.database().connect(DB_PATH)
         cred_store = g.localdb.first("SELECT * FROM cred_store WHERE session_uid='{uid}'".format(uid=session.get("uid")))
         if cred_store:
@@ -74,7 +76,9 @@ def before_request():
 
     if not session.get("logged_in"):
         if g.request_info["ip_address"] in app.config.get("TRUSTED_IP_ADDRESSES"):
+            app_print("PASSED AS TRUSTED IP")
             if not session.get("OPENSHIFT") and app.config.get("OPENSHIFT_BUILD_NAMESPACE"):
+                app_print("RECOGNIZED AS OPENSHIFT")
                 session["OPENSHIFT"] = True
                 session["OPENSHIFT_VERSION"] = 3
                 session["logged_in"] = True
