@@ -73,7 +73,7 @@ def before_request():
         }
 
     if not session.get("logged_in"):
-        if g.request_info["ip_address"] in app.config.get("TRUSTED_IP_ADDRESSES")
+        if g.request_info["ip_address"] in app.config.get("TRUSTED_IP_ADDRESSES"):
             if not session.get("OPENSHIFT") and app.config.get("OPENSHIFT_BUILD_NAMESPACE"):
                 session["OPENSHIFT"] = True
                 session["OPENSHIFT_VERSION"] = 3
