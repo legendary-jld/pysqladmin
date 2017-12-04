@@ -23,7 +23,7 @@ def get_db():
 
 
 def get_credentials():
-    if app.config.get('OPENSHIFT_BUILD_NAMESPACE'):
+    if session.get("OPENSHIFT"):
         credentials = {
             "host": app.config.get('DB_HOST'),
             "port": app.config.get('DB_PORT'),
