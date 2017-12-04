@@ -23,6 +23,7 @@ def get_db():
 
 
 def get_credentials():
+    g.localdb = sqlite3_handler.database().connect(DB_PATH)
     if session.get("OPENSHIFT"):
         app_print("LOAD OPENSHIFT CREDENTIALS")
         credentials = {
@@ -34,7 +35,6 @@ def get_credentials():
         return credentials
     else:
         app_print("LOAD LOCAL CREDENTIALS")
-        g.localdb = sqlite3_handler.database().connect(DB_PATH)
         cred_store = g.localdb.first("SELECT * FROM cred_store WHERE session_uid='{uid}'".format(uid=session.get("uid")))
         if cred_store:
             app_print("Credentials found...")
