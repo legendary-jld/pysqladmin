@@ -31,6 +31,7 @@ def get_credentials():
             "user": app.config.get('DB_USER'),
             "pswd": app.config.get('DB_PASS')
         }
+        return credentials
     else:
         app_print("LOAD LOCAL CREDENTIALS")
         g.localdb = sqlite3_handler.database().connect(DB_PATH)
