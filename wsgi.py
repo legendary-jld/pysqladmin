@@ -159,6 +159,13 @@ def debug_queries():
 def app_print(message):
     print(now().strftime("%b-%d %H-%M-%S |"), "PySQL: ", message)
 
+
+@errorhandling.app_errorhandler(500)
+def internal_server_error_500(error):
+    app_print(str(error))
+    return str(error)
+
+
 if __name__ == "__main__":
     if app.config["DEBUG"] == False:
         app.run(ssl_context='adhoc')
