@@ -96,7 +96,7 @@
     {% endblock %}
   </head>
   <!-- SIZE: {{size}} -->
-  <body>
+  <body data-csrf-token="{{session.get('csrf_token')}}">
     <header>
     </header>
     <!--[if lte IE 9]>

@@ -5,15 +5,47 @@
 <div class="container">
   <div class="columns">
     <div class="column col-12">
-      <div class="form-group">
-        <label class="form-label" for="query-input">Query</label>
-        <textarea class="form-input" id="query-input" style="min-height:50vh;"></textarea>
-      </div>
-      <div class="form-group">
-        <button class="btn"><i class="fa fa-print"></i> To Results</button>
-        <button class="btn"><i class="fa fa-paper-plane"></i> Execute</button>
-      </div>
+      <form id="query-form" action="{{url_for('app_query')}}" method="post">
+        <input type="hidden" id="csrf_token" name="csrf_token" value="{{session.get('csrf_token')}}" />
+        <input type="hidden" id="to_results" name="to_results" value="0" />
+        <div class="form-group">
+          <label class="form-label" for="query-input">Query</label>
+          <textarea class="form-input" id="query-input" name="sql_input" style="min-height:50vh;"></textarea>
+        </div>
+        <div class="form-group">
+          <button class="btn" id="btn-query-toresults"><i class="fa fa-print"></i> To Results</button>
+          <button class="btn" id="btn-query-execute"><i class="fa fa-paper-plane"></i> Execute</button>
+        </div>
+      </form>
+      {% if query -%}
+        {% if query['error'] -%}
+        <div class="text-danger">{{query['error']}}</div>
+        {% endif -%}
+        <div><small class="text-muted">{{query['execution-time']}}</small></div>
+      {% endif -%}
+      {% if query_results -%}
+      <hr />
+        {{query_results}}
+      {% endif -%}
     </div>
   </div>
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready( function() {
+
+  $("#btn-query-toresults").click(function() {
+    $("#to_results").val("1");
+    $("query-form").submit()
+  });
+
+  $("#btn-query-execute").click(function() {
+    $("#to_results").val("0");
+    $("query-form").submit()
+  });
+
+});
+</script>
+{% endblock}

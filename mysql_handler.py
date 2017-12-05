@@ -24,7 +24,8 @@ class database:
             "query-string": None,
             "initiated": None,
             "completed": None,
-            "execution-time": None
+            "execution-time": None,
+            "error": None
             }
 
     def connect(self, host=None, port=None, user=None, pswd=None, defaultdb=None):
@@ -80,7 +81,8 @@ class database:
             "query-initiated": datetime.datetime.utcnow(),
             "query-completed": None,
             "query-processed": None,
-            "execution-time": None
+            "execution-time": None,
+            "error": None
             }
 
         try:
@@ -95,6 +97,7 @@ class database:
             else:
                 sqlCursor.execute(query_string)
         except Exception as e:
+            self.last_query["error"] =  e
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
             self.report(func, "QUERY: {0}".format(query_string))
             return None
@@ -122,7 +125,8 @@ class database:
             "query-initiated": datetime.datetime.utcnow(),
             "query-completed": None,
             "query-processed": None,
-            "execution-time": None
+            "execution-time": None,
+            "error": None
             }
 
         try:
@@ -137,6 +141,7 @@ class database:
             else:
                 sqlCursor.execute(query_string)
         except Exception as e:
+            self.last_query["error"] =  e
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
             self.report(func, "QUERY: {0}".format(query_string))
             return None

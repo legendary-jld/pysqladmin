@@ -1,6 +1,6 @@
 import os, datetime, uuid
 from flask import Flask, render_template, g, request, \
-    session, redirect, url_for, jsonify
+    session, redirect, url_for, jsonify, abort
 from Crypto.Cipher import AES
 # local libaries below
 from simple import now, bit
@@ -104,7 +104,7 @@ def before_request():
         g.credentials = None
 
     if session.get("csrf_token") is None:
-        session["csrf_token"] = str(uuid.uuid4())
+        session["csrf_token"] = "csrf_{0}".format(str(uuid.uuid4()))
 
     # app_print(session)
 
@@ -119,13 +119,31 @@ def teardown_appcontext(exception):
 
 @app.route("/")
 def index():
-    if session.get("logged_in") and g.credentials:
-        return render_template("base_nav.html")
-    else:
+    if not authorized():
         return render_template("login.html")
 
-@app.route("/query")
+    return render_template("base_nav.html")
+
+
+@app.route("/query", methods=["GET", "POST"])
 def app_query():
+    if not authorized():
+        redirect(url_for('index'))
+
+    if request.form:
+        csrf_token = request.form.get("csrf_token")
+        if not session.get("csrf_token") ==  csrf_token:
+            abort(400)
+        sql_input = request.form.get("sql_input")
+        to_results = request.form.get("to_results")
+        if to_results == "1"
+            query_results = g.db.query(sql_input)
+        else:
+            query_results = None
+            g.db.execute(sql_input)
+        return render_template("query.html", query_results=query_results, query=g.db.last_query)
+
+
     return render_template("query.html")
 
 
@@ -162,6 +180,14 @@ def debug_events():
 def debug_queries():
     databases = g.db.query("show databases;")
     return jsonify(g.db.query_log)
+
+
+def authorized():
+    if session.get("logged_in") and g.credentials:
+        return True
+    else:
+        return False
+
 
 def app_print(message):
     print(now().strftime("%b-%d %H-%M-%S |"), "PySQL: ", message)
