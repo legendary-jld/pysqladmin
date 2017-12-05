@@ -136,7 +136,7 @@ def app_query():
             abort(400)
         sql_input = request.form.get("sql_input")
         to_results = request.form.get("to_results")
-        if to_results == "1"
+        if to_results == "1":
             query_results = g.db.query(sql_input)
         else:
             query_results = None
