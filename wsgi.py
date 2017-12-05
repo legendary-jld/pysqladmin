@@ -133,6 +133,8 @@ def app_query():
     if request.form:
         csrf_token = request.form.get("csrf_token")
         if not session.get("csrf_token") ==  csrf_token:
+            print("SESSION CSRF:", session.get("csrf_token"))
+            print("FORM CSRF:", csrf_token)
             abort(400)
         sql_input = request.form.get("sql_input")
         to_results = request.form.get("to_results")
