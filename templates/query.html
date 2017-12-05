@@ -1,6 +1,25 @@
 {% extends 'base_nav.html' %}
 {% block title %}Query{% endblock %}
 
+{% block style %}
+<style>
+table.results-output th {
+  border: 1px solid #999;
+  background-color: #DDD;
+  padding: 0.25rem;
+  font-weight: 700;
+}
+table.results-output td {
+    border: 1px dashed #DDD;
+    padding: 0.15rem 0.25rem;
+}
+inspector-stylesheet:1
+table.results-output {
+    text-align: left;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
   <div class="columns">
