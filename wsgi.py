@@ -83,6 +83,8 @@ def before_request():
                 session["OPENSHIFT"] = True
                 session["OPENSHIFT_VERSION"] = 3
                 session["logged_in"] = True
+                session_uid = "{ip}:{id}".format(ip=ip,id=str(uuid.uuid4())) #Assign to BOTH variables
+                session["uid"] = session_uid
 
     if session.get("logged_in"):
         g.credentials = get_credentials()
