@@ -43,12 +43,14 @@ table.results-output {
         <div><small class="text-muted">Run time: {{query['execution-time']}} seconds</small></div>
       {% endif -%}
       {% if query_results -%}
+        <div><small class="text-muted">{{query_results | length}} records</small></div>
         <div>Results:</div>
         <table class="results-output">
           {% for record in query_results -%}
             {% if loop.first -%}
             <thead>
               <tr>
+              <th></th>
               {% for key in record -%}
               <th>{{key}}</th>
               {% endfor -%}
@@ -58,6 +60,7 @@ table.results-output {
             {% endif -%}
 
             <tr>
+              <td>{{loop.index}}</td>
             {% for key in record -%}
             <td>{{record[key]}}</td>
             {% endfor -%}
