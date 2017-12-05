@@ -59,7 +59,7 @@ table.results-output {
             <tbody>
             {% endif -%}
               <tr>
-                <td>{{loop.index}}</td>
+                <th>{{loop.index}}</th>
               {% for key in record -%}
               <td>{{record[key]}}</td>
               {% endfor -%}
