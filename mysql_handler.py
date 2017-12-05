@@ -96,7 +96,7 @@ class database:
                 sqlCursor.execute(query_string, values)
             else:
                 sqlCursor.execute(query_string)
-        except Exception as e:
+        except pymysql.err.Error as e:
             self.last_query["error"] =  e
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
             self.report(func, "QUERY: {0}".format(query_string))
@@ -140,7 +140,7 @@ class database:
                 sqlCursor.execute(query_string, values)
             else:
                 sqlCursor.execute(query_string)
-        except Exception as e:
+        except pymysql.err.Error as e:
             self.last_query["error"] =  e
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
             self.report(func, "QUERY: {0}".format(query_string))
