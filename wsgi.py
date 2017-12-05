@@ -103,8 +103,9 @@ def before_request():
         app_print("Not Logged In...")
         g.credentials = None
 
-    if session.get("csrf_token") is None:
+    if not session.get("csrf_token"):
         session["csrf_token"] = "csrf_{0}".format(str(uuid.uuid4()))
+        print("NEW SESSION TOKEN:", session.get('csrf_token'))
 
     # app_print(session)
 
@@ -132,7 +133,7 @@ def app_query():
 
     if request.form:
         csrf_token = request.form.get("csrf_token")
-        if not session.get("csrf_token") ==  csrf_token:
+        if session.get("csrf_token") !=  csrf_token:
             print("SESSION CSRF:", session.get("csrf_token"))
             print("FORM CSRF:", csrf_token)
             abort(400)
