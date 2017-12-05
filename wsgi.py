@@ -104,6 +104,7 @@ def before_request():
         g.credentials = None
 
     if not session.get("csrf_token"):
+        print("OLD SESSION TOKEN:", session.get('csrf_token'))
         session["csrf_token"] = "csrf_{0}".format(str(uuid.uuid4()))
         print("NEW SESSION TOKEN:", session.get('csrf_token'))
 
