@@ -10,7 +10,7 @@
         <input type="hidden" id="to_results" name="to_results" value="0" />
         <div class="form-group">
           <label class="form-label" for="query-input">Query</label>
-          <textarea class="form-input" id="query-input" name="sql_input" style="min-height:50vh;"></textarea>
+          <textarea class="form-input" id="query-input" name="sql_input" style="min-height:50vh;">{{request.form.get('sql_input')}}</textarea>
         </div>
         <div class="form-group">
           <button class="btn" id="btn-query-toresults"><i class="fa fa-print"></i> To Results</button>
@@ -18,14 +18,38 @@
         </div>
       </form>
       {% if query -%}
+        <hr />
         {% if query['error'] -%}
         <div class="text-danger">{{query['error']}}</div>
         {% endif -%}
-        <div><small class="text-muted">{{query['execution-time']}}</small></div>
+        <div><small class="text-muted">Run time: {{query['execution-time']}} seconds</small></div>
       {% endif -%}
       {% if query_results -%}
-      <hr />
-        {{query_results}}
+        <div>Results:</div>
+        <table class="results-output">
+          {% for record in query_results -%}
+            {% if loop.first -%}
+            <thead>
+              <tr>
+              {% for key in record -%}
+              <th>{{key}}</th>
+              {% endfor -%}
+              </tr>
+            </thead>
+            <tbody>
+            {% endif -%}
+
+            <tr>
+            {% for key in record -%}
+            <td>{{record[key]}}</td>
+            {% endfor -%}
+            </tr>
+
+            {% if loop.last %}
+            </tbody>
+            {% endif %}
+          {% endfor -%}
+        </table>
       {% endif -%}
     </div>
   </div>

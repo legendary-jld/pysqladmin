@@ -77,9 +77,9 @@ def before_request():
 
     if not session.get("logged_in"):
         if g.request_info["ip_address"] in app.config.get("TRUSTED_IP_ADDRESSES"):
-            app_print("PASSED AS TRUSTED IP")
+            # app_print("PASSED AS TRUSTED IP")
             if not session.get("OPENSHIFT") and app.config.get("OPENSHIFT_BUILD_NAMESPACE"):
-                app_print("RECOGNIZED AS OPENSHIFT")
+                # app_print("RECOGNIZED AS OPENSHIFT")
                 session["OPENSHIFT"] = True
                 session["OPENSHIFT_VERSION"] = 3
                 session["logged_in"] = True
@@ -104,9 +104,9 @@ def before_request():
         g.credentials = None
 
     if not session.get("csrf_token"):
-        print("OLD SESSION TOKEN:", session.get('csrf_token'))
+        # print("OLD SESSION TOKEN:", session.get('csrf_token'))
         session["csrf_token"] = "csrf_{0}".format(str(uuid.uuid4()))
-        print("NEW SESSION TOKEN:", session.get('csrf_token'))
+        # print("NEW SESSION TOKEN:", session.get('csrf_token'))
 
     # app_print(session)
 
@@ -135,8 +135,8 @@ def app_query():
     if request.form:
         csrf_token = request.form.get("csrf_token")
         if session.get("csrf_token") !=  csrf_token:
-            print("SESSION CSRF:", session.get("csrf_token"))
-            print("FORM CSRF:", csrf_token)
+            # print("SESSION CSRF:", session.get("csrf_token"))
+            # print("FORM CSRF:", csrf_token)
             abort(400)
         sql_input = request.form.get("sql_input")
         to_results = request.form.get("to_results")
