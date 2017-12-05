@@ -28,7 +28,7 @@ table.results-output {
         <input type="hidden" id="to_results" name="to_results" value="0" />
         <div class="form-group">
           <label class="form-label" for="query-input">Query</label>
-          <textarea class="form-input" id="query-input" name="sql_input" style="min-height:50vh;">{{request.form.get('sql_input', default='')}}</textarea>
+          <textarea class="form-input" id="query-input" name="sql_input" style="min-height:6rem;">{{request.form.get('sql_input', default='')}}</textarea>
         </div>
         <div class="form-group">
           <button class="btn" id="btn-query-toresults"><i class="fa fa-print"></i> To Results</button>
@@ -40,10 +40,9 @@ table.results-output {
         {% if query['error'] -%}
         <div class="text-danger">{{query['error']}}</div>
         {% endif -%}
-        <div><small class="text-muted">Run time: {{query['execution-time']}} seconds</small></div>
+        <div><small class="text-muted">METRICS: {{query['execution-time']}} seconds | {{query_results | length}} records</small></div>
       {% endif -%}
       {% if query_results -%}
-        <div><small class="text-muted">{{query_results | length}} records</small></div>
         <div>Results:</div>
         <table class="results-output">
           {% for record in query_results -%}

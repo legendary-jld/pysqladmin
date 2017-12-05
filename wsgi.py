@@ -173,7 +173,10 @@ def app_logout():
 def async_schema():
     new_schema = schema.schema(g.localdb, g.db, session["uid"])
     new_schema.mysql_refresh_dbs(recursive=True, purge=True)
-    return jsonify(success=True)
+    if request.is_xhr:
+        return jsonify(success=True)
+    else:
+        redirect(url_for('index'))
 
 @app.route("/debug/events")
 def debug_events():
