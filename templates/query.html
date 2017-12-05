@@ -58,14 +58,12 @@ table.results-output {
             </thead>
             <tbody>
             {% endif -%}
-
-            <tr>
-              <td>{{loop.index}}</td>
-            {% for key in record -%}
-            <td>{{record[key]}}</td>
-            {% endfor -%}
-            </tr>
-
+              <tr>
+                <td>{{loop.index}}</td>
+              {% for key in record -%}
+              <td>{{record[key]}}</td>
+              {% endfor -%}
+              </tr>
             {% if loop.last %}
             </tbody>
             {% endif %}
