@@ -149,6 +149,7 @@ def app_query():
             # print("FORM CSRF:", csrf_token)
             abort(400)
         sql_input = request.form.get("sql_input")
+        sql_input = sql_input.replace(u"\u2018", "'").replace(u"\u2019", "'") # Sanitize unicode single quotes
         to_results = request.form.get("to_results")
         if to_results == "1":
             query_results = g.db.query(sql_input)
