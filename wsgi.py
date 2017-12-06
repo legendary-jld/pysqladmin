@@ -151,8 +151,9 @@ def app_query():
         sql_input = request.form.get("sql_input")
         sql_input = sql_input.replace(u"\u2018", "'").replace(u"\u2019", "'") # Sanitize unicode single quotes
         sql_input = sql_input.replace(u"\u201c", '"').replace(u"\u201d", '"') # Sanitize unicode double quotes
-        sql_input = sql_input.replace(u"\ufffd", '') # Sanitize replacement char
-        sql_input = sql_input.replace(u"\u25aa", '') # Sanitize 'black small square'?
+        for uni in (u"\ufffd", u"\u25aa", u"\u2022"):
+            sql_input.replace(uni, '')
+
         to_results = request.form.get("to_results")
         if to_results == "1":
             query_results = g.db.query(sql_input)
