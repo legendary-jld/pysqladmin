@@ -40,7 +40,7 @@ table.results-output {
         {% if query['error'] -%}
         <div class="text-danger">{{query['error']}}</div>
         {% endif -%}
-        <div><small class="text-muted">METRICS: {{query['execution-time']}} seconds | {{query_results | length}} records</small></div>
+        <div><small class="text-muted">METRICS: {{query['execution-time']}} seconds {% if query_results %}| {{query_results | length}} records {% endif %}</small></div>
       {% endif -%}
       {% if query_results -%}
         <div>Results:</div>
