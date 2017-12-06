@@ -40,16 +40,15 @@ table.results-output {
         {% if query['error'] -%}
         <div class="text-danger">{{query['error']}}</div>
         {% endif -%}
-        <div><small class="text-muted">METRICS: {{query['execution-time']}} seconds {% if query_results %}| {{query_results | length}} records {% endif %}</small></div>
+        <div><small class="text-muted">METRICS: {{query['execution-time']}} seconds {% if query_results %}| {{query_results | length}} record(s) {% endif %}</small></div>
       {% endif -%}
       {% if query_results -%}
-        <div>Results:</div>
         <table class="results-output">
           {% for record in query_results -%}
             {% if loop.first -%}
             <thead>
               <tr>
-              <th></th>
+              <th>#</th>
               {% for key in record -%}
               <th>{{key}}</th>
               {% endfor -%}

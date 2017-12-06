@@ -147,7 +147,10 @@ class database:
             return None
         self.last_query["query-completed"] = datetime.datetime.utcnow()
 
-        column_names = [column[0].lower() for column in sqlCursor.description]
+        if sqlCursor.description:
+            column_names = [column[0].lower() for column in sqlCursor.description]
+        else:
+            column_names = []
         if single_line:
             data = sqlCursor.fetchone()
             if data:
