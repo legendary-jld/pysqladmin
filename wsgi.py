@@ -88,11 +88,16 @@ def before_request():
 
     if session.get("logged_in"):
         g.credentials = get_credentials()
+        if session.get("defaultdb"):
+            defaultdb = session.get("defaultdb")
+        else:
+            defaultdb = ""
         connected = get_db().connect(
             host=g.credentials["host"],
             port=int(g.credentials["port"]),
             user=g.credentials["user"],
-            pswd=g.credentials["pswd"]
+            pswd=g.credentials["pswd"],
+            defaultdb=defaultdb
             )
         if connected:
             session["connected"] = True
@@ -168,6 +173,19 @@ def app_login():
 def app_logout():
     session.clear()
     return redirect(url_for('index'))
+
+
+@app.route("/action/setdb", methods=["POST"])
+def action_setdb():
+    if request.form.values:
+        session['defaultdb'] = request.form.get('defaultdb')
+        new_schema = schema.schema(g.localdb, g.db, session["uid"])
+        new_schema.mysql_refresh_dbs(recursive=True, purge=True)
+    if request.is_xhr:
+        return jsonify(success=True)
+    else:
+        return redirect(url_for('index'))
+
 
 @app.route("/async/schema")
 def async_schema():

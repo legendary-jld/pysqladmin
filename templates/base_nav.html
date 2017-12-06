@@ -33,15 +33,17 @@
           <div class="panel-body active" id="schema-panel">
             {% if g.schema -%}
             <ul class="menu">
-              <li class="divider" data-content="Databases">
+              <li class="divider" data-content="Active Database">
               <li class="menu-item">
-                <select>
-                  <option value="">- Default Database -</option>
-                  {% for dbkey in g.schema -%}
-                  {% set db = g.schema[dbkey] -%}
-                  <option value="{{db['db_name']}}">{{db['db_name']}}</option>
-                  {% endfor -%}
-                </select>
+                <form id="form-defaultdb" action="{{url_for('action_setdb')}}" method="post">
+                  <select class="form-select" name="defaultdb" onchange="$('#form-defaultdb').submit();">
+                    <option value="">- Select -</option>
+                    {% for dbkey in g.schema -%}
+                    {% set db = g.schema[dbkey] -%}
+                    <option value="{{db['db_name']}}">{{db['db_name']}}</option>
+                    {% endfor -%}
+                  </select>
+                </form>
               </li>
               <li class="divider" data-content="Databases">
               {% for dbkey in g.schema -%}

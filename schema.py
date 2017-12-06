@@ -35,7 +35,7 @@ class schema:
         clean_columns = self.localdb.execute("DELETE FROM column_store WHERE session_uid=:uid;", {"uid": self.session_uid})
 
     # db_store (id integer, session_uid text, created text, db_name text)
-    def mysql_refresh_dbs(self, recursive=False, purge=False):
+    def mysql_refresh_dbs(self, recursive=False, purge=False, skip_system_dbs=True):
         if purge:
             self.mysql_purge_schema()
 
@@ -52,16 +52,18 @@ class schema:
                     databases.append({"name":db_name, "system":db_system})
             databases = sorted(databases, key=lambda data: (data["system"], data["name"]))
             for db in databases:
-                sql = """
-                    INSERT INTO db_store (session_uid, created, db_name, flag_sys)
-                    VALUES (:uid, :created, :database, :flag_sys)
-                    """
-                self.localdb.execute(sql, {"uid":self.session_uid, "created":now(), "database": db["name"], "flag_sys": bit(db["system"])})
+                if not db["system"] or( db["system"] and not skip_system_dbs):
+                    sql = """
+                        INSERT INTO db_store (session_uid, created, db_name, flag_sys)
+                        VALUES (:uid, :created, :database, :flag_sys)
+                        """
+                    self.localdb.execute(sql, {"uid":self.session_uid, "created":now(), "database": db["name"], "flag_sys": bit(db["system"])})
         if recursive:
             dbs = self.localdb.query("SELECT id,db_name,flag_sys FROM db_store WHERE session_uid=:uid;", {"uid":self.session_uid})
             if dbs:
                 for db in dbs:
-                    self.mysql_refresh_tables(db, recursive=True)
+                    if not db["system"] or( db["system"] and not skip_system_dbs):
+                        self.mysql_refresh_tables(db, recursive=True)
 
     # table_store (id integer, session_uid text, created text, db_id, integer, table_name text)
     def mysql_refresh_tables(self, db, recursive=False, purge=False):
