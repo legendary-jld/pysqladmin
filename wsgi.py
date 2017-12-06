@@ -176,7 +176,7 @@ def async_schema():
     if request.is_xhr:
         return jsonify(success=True)
     else:
-        redirect(url_for('index'))
+        return redirect(url_for('index'))
 
 
 @app.route("/debug/events")

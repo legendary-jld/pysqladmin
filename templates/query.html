@@ -43,7 +43,7 @@ table.results-output {
       {% if query -%}
         <hr />
         {% if query['error'] -%}
-        <div class="text-error"><i class="fa fa-error"></i> ERROR: {{query['error'][0]}} | {{query['error'][1]}}</div>
+        <div class="text-error" title="{{query['error']}}"><i class="fa fa-exclamation-triangle"></i> ERROR: {{query['error'][0]}} | {{query['error'][1]}}</div>
         {% endif -%}
         <div><small class="text-muted">METRICS: {{query['execution-time']| default("0", true)}} seconds {% if query_results %}| {{query_results | length | default("0", true)}} record(s) {% endif %}</small></div>
       {% endif -%}
