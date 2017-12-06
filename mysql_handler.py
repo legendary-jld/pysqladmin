@@ -101,12 +101,12 @@ class database:
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
             self.report(func, "QUERY: {0}".format(query_string))
             return None
-        sqlCursor.commit()
         self.last_query["query-completed"] = datetime.datetime.utcnow()
 
         query_duration = self.last_query["query-completed"] - self.last_query["query-initiated"]
         self.last_query["execution-time"] = "{}.{:.2}".format(query_duration.seconds, str(query_duration.microseconds*1000))
 
+        self.connection.commit()
         sqlCursor.close()
         self.capture(self.last_query)
         return True
@@ -148,7 +148,6 @@ class database:
         self.last_query["query-completed"] = datetime.datetime.utcnow()
 
         column_names = [column[0].lower() for column in sqlCursor.description]
-
         if single_line:
             data = sqlCursor.fetchone()
             if data:

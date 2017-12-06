@@ -178,6 +178,7 @@ def async_schema():
     else:
         redirect(url_for('index'))
 
+
 @app.route("/debug/events")
 def debug_events():
     return render_template("debug_events.html", event_log=g.db.event_log)
