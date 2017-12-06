@@ -62,8 +62,7 @@ class schema:
             dbs = self.localdb.query("SELECT id,db_name,flag_sys FROM db_store WHERE session_uid=:uid;", {"uid":self.session_uid})
             if dbs:
                 for db in dbs:
-                    if not db["system"] or( db["system"] and not skip_system_dbs):
-                        self.mysql_refresh_tables(db, recursive=True)
+                    self.mysql_refresh_tables(db, recursive=True)
 
     # table_store (id integer, session_uid text, created text, db_id, integer, table_name text)
     def mysql_refresh_tables(self, db, recursive=False, purge=False):
