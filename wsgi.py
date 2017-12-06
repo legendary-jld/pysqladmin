@@ -104,6 +104,11 @@ def before_request():
         else:
             session["connected"] = False
         g.schema = schema.schema(g.localdb, g.db, session.get("uid")).load()
+        if g.schema is None:
+            # Should be a better way to implement this
+            new_schema = schema.schema(g.localdb, g.db, session["uid"])
+            new_schema.mysql_refresh_dbs(recursive=True, purge=True)
+            g.schema = schema.schema(g.localdb, g.db, session.get("uid")).load()
     else:
         app_print("Not Logged In...")
         g.credentials = None
