@@ -1,6 +1,7 @@
 # import pypyodbc
 import pymysql
 import datetime
+from collections import OrderedDict
 
 class database:
     def __init__(self, keep_alive=False, debug=False, uri=None, event_history_length=50, query_history_length=10):
@@ -162,7 +163,7 @@ class database:
             records = []
             if data:
                 for row in data:
-                    records.append(dict(zip(column_names, row)))
+                    records.append(OrderedDict(zip(column_names, row)))
         self.last_query["query-processed"] = datetime.datetime.utcnow()
 
         query_duration = self.last_query["query-completed"] - self.last_query["query-initiated"]
