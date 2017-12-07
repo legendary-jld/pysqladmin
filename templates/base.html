@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css" integrity="sha256-HEtF7HLJZSC3Le1HcsWbz1hDYFPZCqDhZa9QsCgVUdw=" crossorigin="anonymous" /> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.6.3/jquery.contextMenu.min.css" integrity="sha256-rZaCYVSzIuKLAbuM94jgacBYvQH4jNBn1OmUb2beFX4=" crossorigin="anonymous" />
     <link rel="stylesheet" href="../static/css/main.css">
     <style>
     #nav-panel{
@@ -108,6 +109,7 @@
     <!-- <script src="../static/js/vendor/modernizr-3.5.0.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.6.3/jquery.contextMenu.min.js" integrity="sha256-UuDRkiRM7U9K7WKRGS4u7fcj+L43O71/bg5/zwRFLW0=" crossorigin="anonymous"></script>
     <script src="../static/js/plugins.js"></script>
     <script src="../static/js/main.js"></script>
     <script>
@@ -136,6 +138,23 @@
       $(".menu-item > a").click(function() {
         $(this).closest(".menu-item").toggleClass("menu-item-open");
       });
+      $('.menu-item.table').contextMenu({
+        selector: 'a',
+        callback: function(key, options) {
+            var m = "clicked: " + key + " on " + $(this).text();
+            window.console && console.log(m) || alert(m);
+        },
+        items: {
+            "action": {name: "Expand/Collapse"},
+            "sep1": "---------",
+            "selecttop": {name: "Select top 100"},
+            "selectall": {name: "Select all"},
+            "script": {name: "Script table to query"},
+            "truncate": {name: "Truncate table"},
+            "delete": {name: "Delete table"},
+            "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
+        }
+    });
     });
     </script>
     {% block scripts %}
