@@ -186,6 +186,11 @@
               if (key == "selecttop") {
                 location.href="{{url_for('app_query')}}?action=selecttop&table=" + $(this).data("table-id") + "&db=" + $(this).data("db-id");
               }
+              if (key == "selectall") {
+                if (confirm("Are you sure you want to select ALL records? (this could take some time to load)")) {
+                  location.href="{{url_for('app_query')}}?action=selectall&table=" + $(this).data("table-id") + "&db=" + $(this).data("db-id");
+                }
+              }
           },
           items: {
               "action": {name: "Expand/Collapse"},
