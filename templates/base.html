@@ -177,8 +177,9 @@
         captureMenuState(menu_item);
       });
 
-      $('.menu-item.table').each(function() {
+      $('li').each(function() {
         $(this).contextMenu({
+          selector: '.menu-item.table',
           callback: function(key, options) {
               // var m = "clicked: " + key + " on " + $(this).text();
               // window.console && console.log(m) || alert(m);
