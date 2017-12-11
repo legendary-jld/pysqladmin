@@ -1,0 +1,61 @@
+{% extends 'base_nav.html' %}
+{% block title %}Query{% endblock %}
+
+{% block style %}
+<style>
+table.results-output th {
+  border: 1px solid #999;
+  background-color: #DDD;
+  padding: 0.25rem;
+  font-weight: 700;
+}
+table.results-output td {
+    border: 1px dashed #DDD;
+    padding: 0.15rem 0.25rem;
+}
+table.results-output {
+    text-align: left;
+}
+.text-error{
+  color: #990000;
+  background-color: #FF9;
+  padding: 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="columns">
+    <div class="column col-12">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for table in tables -%}
+          <tr>
+            <td><i class="fa fa-table"></i></td>
+            <td>{{table['table_name']}}</td>
+            <td>{{table['metric_records']}}</td>
+            <td><a href="#">VIEW</a></td>
+            <td><a href="#">DELETE</a></td>
+            <td><a href="#">TRUNCATE</a></td>
+          </tr>
+          {% endfor -%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready( function() {
+
+});
+</script>
+{% endblock %}

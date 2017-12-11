@@ -106,6 +106,7 @@ def before_request():
         g.schema = schema.schema(g.localdb, g.db, session.get("uid")).load()
         if not g.schema:
             # Should be a better way to implement this
+            # return redirect(url_for('async_schema'))
             new_schema = schema.schema(g.localdb, g.db, session["uid"])
             new_schema.mysql_refresh_dbs(recursive=True, purge=True)
             g.schema = schema.schema(g.localdb, g.db, session.get("uid")).load()
@@ -187,6 +188,18 @@ def app_query():
         return render_template("query.html")
 
 
+@app.route("/data/db/<int:db>", methods=["GET", "POST"])
+def app_data_db(db):
+    if not authorized():
+        redirect(url_for('index'))
+
+    tables = g.localdb.query(
+        "SELECT * FROM table_store WHERE session_uid=:uid AND db_id=:db_id;",
+         {"uid": session.get("uid"), "db_id": db}
+         )
+     return render_template("data_db.html")
+
+
 @app.route("/login", methods=["POST"])
 def app_login():
     ip_address = request.form.get("ip_address")
@@ -199,6 +212,7 @@ def app_login():
         store_credentials(ip=ip_address, host=db_host, port=db_port, user=user_login, pswd=user_pswd)
         session["logged_in"] = True
     return redirect(url_for("index"))
+
 
 @app.route("/logout")
 def app_logout():
@@ -222,6 +236,28 @@ def action_setdb():
 def async_schema():
     new_schema = schema.schema(g.localdb, g.db, session["uid"])
     new_schema.mysql_refresh_dbs(recursive=True, purge=True)
+
+    if request.is_xhr:
+        return jsonify(success=True)
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route("/async/metrics")
+def async_metrics():
+    tables = g.localdb.query(
+        "SELECT id, table_name FROM table_store WHERE session_uid=:uid AND db_id=:db_id;",
+         {"uid": session.get("uid"), "db_id": db}
+         )
+
+     for record in tables:
+         sql_input = "SELECT COUNT(*) AS `record_count` FROM {0};".format(record["table_name"])
+         result = g.db.first(sql_input)
+            g.lobaldb.execute(
+                "UPDATE table_store SET metric_records = :record_count",
+                {"record_count": result["record_count"]}
+                )
+
     if request.is_xhr:
         return jsonify(success=True)
     else:

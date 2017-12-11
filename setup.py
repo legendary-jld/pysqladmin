@@ -38,7 +38,8 @@ def init_db(path):
             created text NOT NULL,
             updated text,
             db_id integer NOT NULL,
-            table_name text)
+            table_name text,
+            metric_records integer NULL)
         """
     localdb.execute(sql)
 

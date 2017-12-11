@@ -128,17 +128,24 @@
     }
 
     var captureMenuState = function(element) {
+      if (element.hasClass("db")) {
+        element_type = "db"
+      }
+      if (element.hasClass("table")) {
+        element_type = "table"
+        sessionStorage.setItem(element.attr('id'), 'table-' + state_value);
+      }
       if (element.hasClass("menu-item-open")) {
         state_value = "open"
       }
       else {
         state_value = "closed"
       }
-      if (element.hasClass("db")) {
-        sessionStorage.setItem(element.attr('id'), 'db-' + state_value);
+      if (state_value == "open") {
+        sessionStorage.setItem(element.attr('id'), element_type + '-' + state_value);
       }
-      if (element.hasClass("table")) {
-        sessionStorage.setItem(element.attr('id'), 'table-' + state_value);
+      else {
+        sessionStorage.removeItem(element.attr('id')); // Clean up state to minimize storage usage
       }
     }
 
@@ -197,9 +204,8 @@
               "sep1": "---------",
               "selecttop": {name: "Select top 100"},
               "selectall": {name: "Select all"},
-              "script": {name: "Script table to query"},
-              "truncate": {name: "Truncate table"},
-              "delete": {name: "Delete table"},
+              "data": {name: "Data View"},
+              "structure": {name: "Table View"},
               "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
           }
         });
