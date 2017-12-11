@@ -250,13 +250,13 @@ def async_metrics():
          {"uid": session.get("uid"), "db_id": db}
          )
 
-     for record in tables:
-         sql_input = "SELECT COUNT(*) AS `record_count` FROM {0};".format(record["table_name"])
-         result = g.db.first(sql_input)
-            g.lobaldb.execute(
-                "UPDATE table_store SET metric_records = :record_count",
-                {"record_count": result["record_count"]}
-                )
+    for record in tables:
+        sql_input = "SELECT COUNT(*) AS `record_count` FROM {0};".format(record["table_name"])
+        result = g.db.first(sql_input)
+        g.lobaldb.execute(
+            "UPDATE table_store SET metric_records = :record_count",
+            {"record_count": result["record_count"]}
+            )
 
     if request.is_xhr:
         return jsonify(success=True)
