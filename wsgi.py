@@ -147,6 +147,7 @@ def app_query():
         action = request.args.get('action')
         table_id = request.args.get('table')
         db_id = request.args.get('db')
+        print(action, table_id, db_id, session.get('uid'))
         if action == "selecttop":
             for_query=True
             results = g.localdb.query(
