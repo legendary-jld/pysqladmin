@@ -145,7 +145,7 @@
     var setViewState = function(key) {
       state_element = $("#" + key);
       if (state_element) {
-        var state_value = sessionStorage.getItem('key');
+        var state_value = sessionStorage.getItem(key);
         if (state_value == "db-open") {
           state_element.addClass('menu-item-open');
         }
