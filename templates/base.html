@@ -177,7 +177,7 @@
         captureMenuState(menu_item);
       });
 
-      $('.menu-item.table').each(
+      $('.menu-item.table').each(function() {
         $(this).contextMenu({
           selector: 'a',
           callback: function(key, options) {
@@ -195,7 +195,7 @@
               "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
           }
         });
-      );
+      });
 
     });
     </script>
