@@ -197,7 +197,7 @@ def app_data_db(db):
         "SELECT * FROM table_store WHERE session_uid=:uid AND db_id=:db_id;",
          {"uid": session.get("uid"), "db_id": db}
          )
-     return render_template("data_db.html")
+    return render_template("data_db.html")
 
 
 @app.route("/login", methods=["POST"])
