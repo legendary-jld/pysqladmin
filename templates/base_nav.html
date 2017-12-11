@@ -48,7 +48,7 @@
               <li class="divider" data-content="Databases">
               {% for dbkey in g.schema -%}
               {% set db = g.schema[dbkey] -%}
-              <li id="db-{{db['id']}}" class="menu-item db {{'db-sys' if db['flag_sys']}}">
+              <li id="db-{{db['id']}}" class="menu-item db {{'db-sys' if db['flag_sys']}}" data-db-id="{{db['id']}}">
                 <a href="#"><i></i>{{db["db_name"]}}</a>
                 <ul class="menu menu-sub"> <!-- Tables Menu -->
                   <!--<li class="divider" data-content="Tables">-->
@@ -57,7 +57,7 @@
                   </li>
                   {% for tablekey in db["tables"] -%}
                   {% set table = db["tables"][tablekey] -%}
-                  <li id="table-{{table['id']}}" class="menu-item table">
+                  <li id="table-{{table['id']}}" class="menu-item table" data-table-id="{{table['id']}}" data-db-id="{{db['id']}}">
                     <a href="#"><i></i>{{table["table_name"]}}</a>
                     <ul class="menu menu-sub"> <!-- Tables Menu -->
                       <li class="menu-item">
@@ -73,7 +73,7 @@
                       {% elif column['column_type'][:6] == "bigint" or column['column_type'][:3] == "int" -%}
                         {% set col_type = 'numeric' -%}
                       {% endif -%}
-                      <li class="menu-item column {{col_type}}">
+                      <li id="col-{{column['id']}}" class="menu-item column {{col_type}}" data-col-id="{{column['id']}}">
                         <a href="#" title="{{column['column_type']}} | {{column['is_nullable']}}"><i></i>{{column["column_name"]}}</a>
                       </li>
                     {% endfor %}
