@@ -173,8 +173,8 @@
 
       $(".menu-item > a").click(function() {
         var menu_item = $(this).closest(".menu-item");
-        captureMenuState(menu_item);
         menu_item.toggleClass("menu-item-open"); // Collapse menu
+        captureMenuState(menu_item);
       });
 
       $('.menu-item.table').contextMenu({
