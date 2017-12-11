@@ -127,18 +127,18 @@
       Object.keys(sessionStorage).forEach(key => setViewState(key));
     }
 
-    var captureViewState = function(element) {
-      if (menu_item.hasClass("menu-item-open")) {
+    var captureMenuState = function(element) {
+      if (element.hasClass("menu-item-open")) {
         state_value = "open"
       }
       else {
         state_value = "closed"
       }
-      if (menu_item.hasClass("db")) {
-        sessionStorage.setItem(menu_item.attr('id'), 'db-' + state_value);
+      if (element.hasClass("db")) {
+        sessionStorage.setItem(element.attr('id'), 'db-' + state_value);
       }
-      if (menu_item.hasClass("table")) {
-        sessionStorage.setItem(menu_item.attr('id'), 'table-' + state_value);
+      if (element.hasClass("table")) {
+        sessionStorage.setItem(element.attr('id'), 'table-' + state_value);
       }
     }
 
@@ -173,7 +173,7 @@
 
       $(".menu-item > a").click(function() {
         var menu_item = $(this).closest(".menu-item");
-        captureViewState(menu_item);
+        captureMenuState(menu_item);
         menu_item.toggleClass("menu-item-open"); // Collapse menu
       });
 
