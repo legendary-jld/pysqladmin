@@ -33,7 +33,7 @@ table.results-output {
         <input type="hidden" id="to_results" name="to_results" value="0" />
         <div class="form-group">
           <label class="form-label" for="query-input">Query</label>
-          <textarea class="form-input" id="query-input" name="sql_input" style="min-height:6rem;">{{request.form.get('sql_input', default='')}}</textarea>
+          <textarea class="form-input" id="query-input" name="sql_input" style="min-height:6rem;">{{sql_input}}</textarea>
         </div>
         <div class="form-group">
           <button class="btn" id="btn-query-toresults"><i class="fa fa-print"></i> To Results</button>

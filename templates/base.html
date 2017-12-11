@@ -177,24 +177,25 @@
         captureMenuState(menu_item);
       });
 
-      $('.menu-item.table').contextMenu({
-        selector: 'a',
-        callback: function(key, options) {
-            var m = "clicked: " + key + " on " + $(this).text();
-            window.console && console.log(m) || alert(m);
-        },
-        items: {
-            "action": {name: "Expand/Collapse"},
-            "sep1": "---------",
-            "selecttop": {name: "Select top 100"},
-            "selectall": {name: "Select all"},
-            "script": {name: "Script table to query"},
-            "truncate": {name: "Truncate table"},
-            "delete": {name: "Delete table"},
-            "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
-        }
-
-    });
+      $('.menu-item.table').each(
+        $(this).contextMenu({
+          selector: 'a',
+          callback: function(key, options) {
+              var m = "clicked: " + key + " on " + $(this).text();
+              window.console && console.log(m) || alert(m);
+          },
+          items: {
+              "action": {name: "Expand/Collapse"},
+              "sep1": "---------",
+              "selecttop": {name: "Select top 100"},
+              "selectall": {name: "Select all"},
+              "script": {name: "Script table to query"},
+              "truncate": {name: "Truncate table"},
+              "delete": {name: "Delete table"},
+              "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
+          }
+        });
+      );
 
     });
     </script>

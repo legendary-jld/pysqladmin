@@ -142,6 +142,22 @@ def app_query():
     if not authorized():
         redirect(url_for('index'))
 
+    sql_input = ""
+    for_query = False
+    if request.arguments:
+        action = request.arguments.get('action')
+        table_id = request.arguments.get('table')
+        db_id = request.arguments.get('db')
+        if action = "selecttop":
+            for_query=True
+            results = g.localdb.query(
+                "SELECT table_name FROM table_store WHERE session_uid=:uid AND db_id=:db_id AND table_id=:table_id;",
+                 {"uid": self.session_uid, "db_id": db_id, "table_id": table_id}
+                 ) # Verify table name for query
+            sql_input = "SELECT TOP 100 * FROM {0};".format(results["table_name"])
+            query_results = g.db.query(sql_input)
+
+
     if request.form:
         csrf_token = request.form.get("csrf_token")
         if session.get("csrf_token") !=  csrf_token:
@@ -161,10 +177,12 @@ def app_query():
         else:
             query_results = None
             g.db.execute(sql_input)
-        return render_template("query.html", query_results=query_results, query=g.db.last_query)
+        for_query = True
 
-
-    return render_template("query.html")
+    if for_query:
+        return render_template("query.html", sql_input=sql_input, query_results=query_results, query=g.db.last_query)
+    else:
+        return render_template("query.html")
 
 
 @app.route("/login", methods=["POST"])
