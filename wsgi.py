@@ -148,7 +148,7 @@ def app_query():
         table_id = request.args.get('table')
         db_id = request.args.get('db')
         print(action, table_id, db_id, session.get('uid'))
-        if action IN ("selecttop", "selectall"):
+        if action in ("selecttop", "selectall"):
             for_query=True
             table_result = g.localdb.query(
                 "SELECT table_name FROM table_store WHERE session_uid=:uid AND db_id=:db_id AND id=:table_id;",
