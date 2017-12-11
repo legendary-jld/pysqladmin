@@ -150,11 +150,11 @@ def app_query():
         print(action, table_id, db_id, session.get('uid'))
         if action == "selecttop":
             for_query=True
-            results = g.localdb.query(
+            table_result = g.localdb.query(
                 "SELECT table_name FROM table_store WHERE session_uid=:uid AND db_id=:db_id AND id=:table_id;",
-                 {"uid": session.get("uid"), "db_id": db_id, "table_id": table_id}
-                 ) # Verify table name for query
-            sql_input = "SELECT TOP 100 * FROM {0};".format(results["table_name"])
+                 {"uid": session.get("uid"), "db_id": db_id, "table_id": table_id},
+                 single_line=True) # Verify table name for query
+            sql_input = "SELECT TOP 100 * FROM {0};".format(table_result["table_name"])
             query_results = g.db.query(sql_input)
 
 
