@@ -168,7 +168,7 @@ class database:
 
         query_duration = self.last_query["query-completed"] - self.last_query["query-initiated"]
         self.last_query["execution-time"] = "{}.{:.2}".format(query_duration.seconds, str(query_duration.microseconds*1000))
-        print("Records:", records)
+        # print("Records:", records)
         sqlCursor.close()
         self.capture(self.last_query)
         return records

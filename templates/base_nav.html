@@ -48,7 +48,7 @@
               <li class="divider" data-content="Databases">
               {% for dbkey in g.schema -%}
               {% set db = g.schema[dbkey] -%}
-              <li class="menu-item db {{'db-sys' if db['flag_sys']}}">
+              <li id="db-{{db['id']}}" class="menu-item db {{'db-sys' if db['flag_sys']}}">
                 <a href="#"><i></i>{{db["db_name"]}}</a>
                 <ul class="menu menu-sub"> <!-- Tables Menu -->
                   <!--<li class="divider" data-content="Tables">-->
@@ -57,7 +57,7 @@
                   </li>
                   {% for tablekey in db["tables"] -%}
                   {% set table = db["tables"][tablekey] -%}
-                  <li class="menu-item table">
+                  <li id="table-{{table['id']}}" class="menu-item table">
                     <a href="#"><i></i>{{table["table_name"]}}</a>
                     <ul class="menu menu-sub"> <!-- Tables Menu -->
                       <li class="menu-item">

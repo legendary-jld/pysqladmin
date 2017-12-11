@@ -123,6 +123,38 @@
     });
     </script>
     <script>
+    var refreshViewState = function() {
+      Object.keys(sessionStorage).forEach(key => setViewState(key));
+    }
+
+    var captureViewState = function(element) {
+      if (menu_item.hasClass("menu-item-open")) {
+        state_value = "open"
+      }
+      else {
+        state_value = "closed"
+      }
+      if (menu_item.hasClass("db")) {
+        sessionStorage.setItem(menu_item.attr('id'), 'db-' + state_value);
+      }
+      if (menu_item.hasClass("table")) {
+        sessionStorage.setItem(menu_item.attr('id'), 'table-' + state_value);
+      }
+    }
+
+    var setViewState = function(key) {
+      state_element = $("#" + key);
+      if (state_element) {
+        var state_value = sessionStorage.getItem('key');
+        if (state_value == "db-open") {
+          state_element.addClass('menu-item-open');
+        }
+        if (state_value == "table-open") {
+          state_element.addClass('menu-item-open');
+        }
+      }
+    }
+
     var activatePanel =  function(panel_id, body_id, tab_id){
       $("#" + panel_id + " .panel-body").removeClass("active")
       $("#" + panel_id + " .tab-item").removeClass("active")
@@ -131,13 +163,20 @@
     }
 
     $().ready(function(){
+
+      refreshViewState();
+
       $("#btn-refresh").click(function() {
         $("#btn-refresh .fa").addClass("fa-spin");
         window.location.reload();
       });
+
       $(".menu-item > a").click(function() {
-        $(this).closest(".menu-item").toggleClass("menu-item-open");
+        var menu_item = $(this).closest(".menu-item");
+        captureViewState(menu_item);
+        menu_item.toggleClass("menu-item-open"); // Collapse menu
       });
+
       $('.menu-item.table').contextMenu({
         selector: 'a',
         callback: function(key, options) {
@@ -154,7 +193,9 @@
             "delete": {name: "Delete table"},
             "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
         }
+
     });
+
     });
     </script>
     {% block scripts %}
