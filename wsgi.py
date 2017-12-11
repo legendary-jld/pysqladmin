@@ -143,10 +143,10 @@ def app_query():
 
     sql_input = ""
     for_query = False
-    if request.arguments:
-        action = request.arguments.get('action')
-        table_id = request.arguments.get('table')
-        db_id = request.arguments.get('db')
+    if request.args:
+        action = request.args.get('action')
+        table_id = request.args.get('table')
+        db_id = request.args.get('db')
         if action == "selecttop":
             for_query=True
             results = g.localdb.query(
@@ -160,8 +160,7 @@ def app_query():
     if request.form:
         csrf_token = request.form.get("csrf_token")
         if session.get("csrf_token") !=  csrf_token:
-            # print("SESSION CSRF:", session.get("csrf_token"))
-            # print("FORM CSRF:", csrf_token)
+            # print("SESSION CSRF:", session.get("csrf_token"), "FORM CSRF:", csrf_token)
             abort(400)
         sql_input = request.form.get("sql_input")
         sql_input = sql_input.replace(u"\u2018", "''").replace(u"\u2019", "''") # Sanitize unicode single quotes (and make them sql safe)
