@@ -182,7 +182,7 @@
           selector: 'a',
           callback: function(key, options) {
               // var m = "clicked: " + key + " on " + $(this).text();
-              window.console && console.log(m) || alert(m);
+              // window.console && console.log(m) || alert(m);
               if (key == "selecttop") {
                 location.href="{{url_for('app_query')}}?action=selecttop&table=" + $(this).data("table-id") + "&db=" + $(this).data("db-id");
               }
