@@ -40,7 +40,7 @@
                     <option value="">- Select -</option>
                     {% for dbkey in g.schema -%}
                     {% set db = g.schema[dbkey] -%}
-                    <option value="{{db['db_name']}}"  {{'selected' if session.get('defaultdb') == db['db_name']}}>{{db['db_name']}}</option>
+                    <option value="{{db['id']}}"  {{'selected' if session.get('defaultdb') == db['id']}}>{{db['db_name']}}</option>
                     {% endfor -%}
                   </select>
                 </form>

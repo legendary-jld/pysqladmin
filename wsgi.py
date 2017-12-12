@@ -247,7 +247,7 @@ def async_schema():
 def async_metrics():
     tables = g.localdb.query(
         "SELECT id, table_name FROM table_store WHERE session_uid=:uid AND db_id=:db_id;",
-         {"uid": session.get("uid"), "db_id": db}
+         {"uid": session.get("uid"), "db_id": session.get("defaultdb")}
          )
 
     for record in tables:
