@@ -88,9 +88,9 @@ class database:
         sqlCursor.close()
         return records
 
-    def first(self, query_string):
+    def first(self, query_string, values=None):
         func = "sqlite3.database.first()"
-        return self.query(query_string, single_line=True)
+        return self.query(query_string, values=values, single_line=True)
 
     def report(self, function_desc, message):
         event_string = "{0} | {1}".format(function_desc, message)
