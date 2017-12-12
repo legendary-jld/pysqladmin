@@ -155,7 +155,7 @@ class database:
         if single_line:
             data = sqlCursor.fetchone()
             if data:
-                records.append(dict(zip(column_names, data)))
+                records = dict(zip(column_names, data))
             else:
                 records = {}
         else:
