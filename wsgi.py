@@ -245,7 +245,7 @@ def async_schema():
 
 @app.route("/async/metrics")
 def async_metrics():
-    db = g.localdb.query(
+    db = g.localdb.first(
         "SELECT id FROM db_store WHERE session_uid=:uid AND db_name=:db_name;",
          {"uid": session.get("uid"), "db_name": session.get("defaultdb")}
          )
