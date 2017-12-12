@@ -258,7 +258,7 @@ def async_metrics():
     for record in tables:
         sql_input = "SELECT COUNT(*) AS `record_count` FROM `{0}`;".format(record["table_name"])
         result = g.db.first(sql_input)
-        g.lobaldb.execute(
+        g.localdb.execute(
             "UPDATE table_store SET metric_records = :record_count WHERE table_id = ",
             {"record_count": result["record_count"]}
             )
