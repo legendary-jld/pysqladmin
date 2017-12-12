@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% if session.get('connected') -%}
+{% block title %}[CONNECTED]{% endblock %}
+{% else -%}
+{% block title %}[DISCONNECTED]{% endblock %}
+{% endif -%}
+
 {% block nav %}
 <section>
   <div class="container">
@@ -40,7 +46,7 @@
                     <option value="">- Select -</option>
                     {% for dbkey in g.schema -%}
                     {% set db = g.schema[dbkey] -%}
-                    <option value="{{db['id']}}"  {{'selected' if session.get('defaultdb') == db['id']}}>{{db['db_name']}}</option>
+                    <option value="{{db['db_name']}}"  {{'selected' if session.get('defaultdb') == db['db_name']}}>{{db['db_name']}}</option>
                     {% endfor -%}
                   </select>
                 </form>

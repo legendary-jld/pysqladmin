@@ -156,9 +156,9 @@ def app_query():
                  {"uid": session.get("uid"), "db_id": db_id, "table_id": table_id},
                  single_line=True) # Verify table name for query
             if action == "selectall" :
-                sql_input = "SELECT * FROM {0};".format(table_result["table_name"])
+                sql_input = "SELECT * FROM `{0}`;".format(table_result["table_name"])
             elif action == "selecttop":
-                sql_input = "SELECT * FROM {0} LIMIT 100;".format(table_result["table_name"])
+                sql_input = "SELECT * FROM `{0}` LIMIT 100;".format(table_result["table_name"])
             query_results = g.db.query(sql_input)
 
 
@@ -245,16 +245,21 @@ def async_schema():
 
 @app.route("/async/metrics")
 def async_metrics():
+    db = g.localdb.query(
+        "SELECT id FROM db_store WHERE session_uid=:uid AND db_name=:db_name;",
+         {"uid": session.get("uid"), "db_name": session.get("defaultdb")}
+         )
+
     tables = g.localdb.query(
         "SELECT id, table_name FROM table_store WHERE session_uid=:uid AND db_id=:db_id;",
-         {"uid": session.get("uid"), "db_id": session.get("defaultdb")}
+         {"uid": session.get("uid"), "db_id": db.get("id")}
          )
 
     for record in tables:
-        sql_input = "SELECT COUNT(*) AS `record_count` FROM {0};".format(record["table_name"])
+        sql_input = "SELECT COUNT(*) AS `record_count` FROM `{0}`;".format(record["table_name"])
         result = g.db.first(sql_input)
         g.lobaldb.execute(
-            "UPDATE table_store SET metric_records = :record_count",
+            "UPDATE table_store SET metric_records = :record_count WHERE table_id = ",
             {"record_count": result["record_count"]}
             )
 
