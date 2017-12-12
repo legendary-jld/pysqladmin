@@ -28,21 +28,44 @@ table.results-output {
 <div class="container">
   <div class="columns">
     <div class="column col-12">
-      <table>
+      <table class="table">
         <thead>
           <tr>
             <th></th>
+            <th>Table</th>
+            <th>Records</th>
+            <th colspan="3"></th>
           </tr>
         </thead>
         <tbody>
           {% for table in tables -%}
           <tr>
-            <td><i class="fa fa-table"></i></td>
             <td>{{table['table_name']}}</td>
             <td>{{table['metric_records']}}</td>
-            <td><a href="#">VIEW</a></td>
-            <td><a href="#">DELETE</a></td>
-            <td><a href="#">TRUNCATE</a></td>
+            <td>
+              <div class="popover popover-right">
+                <button class="btn btn-primary"><i class="fa fa-table"></i> Data <i class="fa fa-caret-down"></i></button>
+                <div class="popover-container">
+                  <ul class="menu">
+                    <li class="menu-item"><a href="#">Paged View</a></li>
+                    <li class="menu-item"><a href="#">Integrity Checks</a></li>
+                    <li class="menu-item"><a href="#">Truncate Data</a></li>
+                  </ul>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="popover popover-right">
+                <button class="btn btn-primary"><i class="fa fa-cog"></i> Operations <i class="fa fa-caret-down"></i></button>
+                <div class="popover-container">
+                  <ul class="menu">
+                    <li class="menu-item"><a href="#">Edit Fields</a></li>
+                    <li class="menu-item"><a href="#">Delete Table</a></li>
+                    <li class="menu-item"><a href="#">Export Data</a></li>
+                  </ul>
+                </div>
+              </div>
+            </td>
           </tr>
           {% endfor -%}
         </tbody>
