@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 
-{% if session.get('connected') -%}
-{% block title %}[CONNECTED]{% endblock %}
-{% else -%}
-{% block title %}[DISCONNECTED]{% endblock %}
-{% endif -%}
+{% block title %}{% if session.get('connected') -%}[CONNECTED]{% else -%}[DISCONNECTED]{% endif -%}{% endblock %}
 
 {% block nav %}
 <section>
