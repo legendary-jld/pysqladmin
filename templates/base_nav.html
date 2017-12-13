@@ -46,6 +46,14 @@
                     {% endfor -%}
                   </select>
                 </form>
+                <!--
+                <form id="form-defaultdb" action="/action/setdb" method="post">
+                  <select class="form-select" name="defaultdb" onchange="$('#form-defaultdb').submit();">
+                    <option value="">- Select -</option>
+                    <option value="prod">prod</option>
+                  </select>
+                </form>
+                -->
               </li>
               <li class="divider" data-content="Databases">
               {% for dbkey in g.schema -%}
