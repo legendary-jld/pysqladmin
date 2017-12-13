@@ -91,7 +91,7 @@ def before_request():
         if session.get("defaultdb"):
             defaultdb = session.get("defaultdb")
         else:
-            defaultdb = ""
+            defaultdb = app.config.get("DB_NAME")
         connected = get_db().connect(
             host=g.credentials["host"],
             port=int(g.credentials["port"]),
