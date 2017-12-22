@@ -171,7 +171,7 @@ def app_query():
         unsanitized_sql = sql_input.splitlines()
         sanitized_sql = []
         for line in unsanitized_sql:
-            sanitized_sql.append(line.strip() + "\n")
+            sanitized_sql.append(line.strip() + chr(13))
         sql_input = "".join(sanitized_sql)
 
         sql_input = sql_input.replace(u"\u2018", "''").replace(u"\u2019", "''") # Sanitize unicode single quotes (and make them sql safe)
