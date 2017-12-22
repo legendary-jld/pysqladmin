@@ -175,7 +175,7 @@ def app_query():
             if cleaned_line[:2] == "--": # Skip single line comments
                 pass
             else:
-                sanitized_sql.append(cleaned_line + chr(13))
+                sanitized_sql.append(cleaned_line)
         sql_input = "".join(sanitized_sql)
 
         sql_input = sql_input.replace(u"\u2018", "''").replace(u"\u2019", "''") # Sanitize unicode single quotes (and make them sql safe)
