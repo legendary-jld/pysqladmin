@@ -168,6 +168,12 @@ def app_query():
             # print("SESSION CSRF:", session.get("csrf_token"), "FORM CSRF:", csrf_token)
             abort(400)
         sql_input = request.form.get("sql_input")
+        unsanitized_sql = sql_input.splitlines()
+        sanitized_sql = []
+        for line in unsanitized_sql:
+            sanitized_sql.append(line.strip())
+        sql_input = "".join(sanitized_sql)
+        
         sql_input = sql_input.replace(u"\u2018", "''").replace(u"\u2019", "''") # Sanitize unicode single quotes (and make them sql safe)
         sql_input = sql_input.replace(u"\u201c", '"').replace(u"\u201d", '"') # Sanitize unicode double quotes
         for uni in (u"\ufffd", u"\u25aa", u"\u2022", u"\uf0d8", u"\u2028", u"\u20ac",
