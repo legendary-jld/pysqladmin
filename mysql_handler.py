@@ -98,9 +98,9 @@ class database:
             else:
                 sqlCursor.execute(query_string)
         except pymysql.err.Error as e:
-            self.last_query["error"] =  e
+            self.last_query["error"] =  str(e)
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
-            self.report(func, "QUERY: {0}".format(query_string))
+            # self.report(func, "QUERY: {0}".format(query_string))
             return None
         self.last_query["query-completed"] = datetime.datetime.utcnow()
 
@@ -142,9 +142,9 @@ class database:
             else:
                 sqlCursor.execute(query_string)
         except pymysql.err.Error as e:
-            self.last_query["error"] =  e
+            self.last_query["error"] =  str(e)
             self.report(func, "ERROR: Query string failed to execute: {0}".format(e))
-            self.report(func, "QUERY: {0}".format(query_string))
+            # self.report(func, "QUERY: {0}".format(query_string))
             return None
         self.last_query["query-completed"] = datetime.datetime.utcnow()
 
