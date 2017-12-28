@@ -85,6 +85,8 @@ def before_request():
                 session["logged_in"] = True
                 session_uid = "{ip}:{id}".format(ip=g.request_info["ip_address"], id=str(uuid.uuid4())) #Assign to BOTH variables
                 session["uid"] = session_uid
+        else:
+            print("IP NOT TRUSTED:", g.request_info["ip_address"])
 
     if session.get("logged_in"):
         g.credentials = get_credentials()

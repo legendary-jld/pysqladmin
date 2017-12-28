@@ -1,0 +1,18 @@
+{% extends 'base_nav.html' %}
+{% block title %}Query Log{% endblock %}
+
+{% block content %}
+
+{% for log in query_log -%}
+  <div>{{log}}</div>
+{% else %}
+  <div class="empty" style="height:100vh;">
+    <div class="empty-icon">
+      <i class="icon icon-people"></i>
+    </div>
+    <p class="empty-title h5">Queries</p>
+    <p class="empty-subtitle">There are no queries to show.</p>
+  </div>
+{% endfor -%}
+
+{% endblock %}
