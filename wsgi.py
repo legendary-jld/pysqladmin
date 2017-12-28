@@ -169,20 +169,21 @@ def app_query():
             abort(400)
         sql_input = request.form.get("sql_input")
         unsanitized_sql = sql_input.splitlines()
+
         sanitized_sql = []
         for line in unsanitized_sql:
             cleaned_line = line.strip()
             if cleaned_line[:2] == "--": # Skip single line comments
                 pass
             else:
-                sanitized_sql.append(cleaned_line)
+                sanitized_sql.append(cleaned_line + " ")
         sql_input = "".join(sanitized_sql)
 
         sql_input = sql_input.replace(u"\u2018", "''").replace(u"\u2019", "''") # Sanitize unicode single quotes (and make them sql safe)
         sql_input = sql_input.replace(u"\u201c", '"').replace(u"\u201d", '"') # Sanitize unicode double quotes
         for uni in (u"\ufffd", u"\u25aa", u"\u2022", u"\uf0d8", u"\u2028", u"\u20ac",
             u"\u2026", u"\u2013", u"\u2502", u"\u2122", u"\ufeff", u"\u200b", u"\uf09f",
-             u"\uf0fc", u"\u25cf", u"\u202c"):
+             u"\uf0fc", u"\u25cf", u"\u202c", u"\u2014"):
             sql_input = sql_input.replace(uni, '')
 
         to_results = request.form.get("to_results")
@@ -192,6 +193,8 @@ def app_query():
             query_results = None
             g.db.execute(sql_input)
         for_query = True
+
+        sql_input = request.form.get("sql_input") # Return to original value
 
     if for_query:
         return render_template("query.html", sql_input=sql_input, query_results=query_results, query=g.db.last_query)
