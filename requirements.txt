@@ -1,4 +1,4 @@
-gunicorn
-Flask
-pymysql
+gunicorn==19.8.1
+Flask==1.0.1
+pymysql==0.8.1
 pycrypto
