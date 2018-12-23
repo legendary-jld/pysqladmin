@@ -5,6 +5,7 @@ from Crypto.Cipher import AES
 # local libaries below
 from simple import now, bit
 import setup, schema, mysql_handler, sqlite3_handler
+import loguru
 
 app = Flask(__name__)
 app.config.from_pyfile('wsgi.cfg')
@@ -312,9 +313,13 @@ def internal_server_error_500(error):
     app_print(str(error))
     return str(error)
 
-
-if __name__ == "__main__":
+@logger.catch
+def main():
     if app.config["DEBUG"] == False:
         app.run(ssl_context='adhoc')
     else:
         app.run()
+
+
+if __name__ == "__main__":
+    main()
